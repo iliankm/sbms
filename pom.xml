@@ -5,4 +5,7 @@
 	<artifactId>sbms</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
+	<modules>
+		<module>sbms-deps</module>
+	</modules>
 </project>
