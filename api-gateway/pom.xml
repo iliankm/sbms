@@ -7,5 +7,12 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>api-gateway</artifactId>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.iliankm.sbms</groupId>
+			<artifactId>commons</artifactId>
+		</dependency>
+	</dependencies>
 	
 </project>

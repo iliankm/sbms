@@ -7,5 +7,12 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>admin-service</artifactId>
-	
+
+	<dependencies>
+		<dependency>
+			<groupId>com.iliankm.sbms</groupId>
+			<artifactId>commons</artifactId>
+		</dependency>
+	</dependencies>
+
 </project>

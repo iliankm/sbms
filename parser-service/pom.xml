@@ -8,4 +8,11 @@
 	</parent>
 	<artifactId>parser-service</artifactId>
 	
+	<dependencies>
+		<dependency>
+			<groupId>com.iliankm.sbms</groupId>
+			<artifactId>commons</artifactId>
+		</dependency>
+	</dependencies>
+	
 </project>
