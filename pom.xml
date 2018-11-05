@@ -9,13 +9,9 @@
 		<module>sbms-deps</module>
 		<module>authentication-service</module>
 		<module>commons</module>
-		<module>authentication-service-client</module>
 		<module>admin-service</module>
 		<module>api-gateway</module>
 		<module>subscriber-service</module>
-		<module>subscriber-service-client</module>
-		<module>parser-service-client</module>
 		<module>operations-service</module>
-		<module>operations-service-client</module>
 	</modules>
 </project>
