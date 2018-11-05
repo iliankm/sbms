@@ -8,14 +8,4 @@
 	</parent>
 	<artifactId>commons</artifactId>
 	
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.iliankm.sbms</groupId>
-				<artifactId>sbms-deps</artifactId>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-	
 </project>
