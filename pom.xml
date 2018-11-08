@@ -12,6 +12,10 @@
 		<version>2.0.0.RELEASE</version>
 	</parent>
 
+	<properties>
+		<spring-boot-admin-version>1.5.7</spring-boot-admin-version>
+	</properties>
+
 	<modules>
 		<module>authentication-service</module>
 		<module>commons</module>
@@ -23,6 +27,21 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>de.codecentric</groupId>
+				<artifactId>spring-boot-admin-server</artifactId>
+				<version>${spring-boot-admin-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.codecentric</groupId>
+				<artifactId>spring-boot-admin-server-ui</artifactId>
+				<version>${spring-boot-admin-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.codecentric</groupId>
+				<artifactId>spring-boot-admin-starter-client</artifactId>
+				<version>${spring-boot-admin-version}</version>
+			</dependency>
 			<dependency>
 				<groupId>com.iliankm.sbms</groupId>
 				<artifactId>commons</artifactId>
