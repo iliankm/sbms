@@ -50,4 +50,31 @@
 		</dependencies>
 	</dependencyManagement>
 
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.spotify</groupId>
+					<artifactId>docker-maven-plugin</artifactId>
+					<version>1.2.0</version>
+					<configuration>
+						<imageName>sbms/${artifactId}</imageName>
+						<dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
+						<forceTags>true</forceTags>
+						<imageTags>
+							<imageTag>latest</imageTag>
+						</imageTags>
+						<resources>
+							<resource>
+								<targetPath>/</targetPath>
+								<directory>${project.build.directory}</directory>
+								<include>${artifactId}.jar</include>
+							</resource>
+						</resources>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
 </project>

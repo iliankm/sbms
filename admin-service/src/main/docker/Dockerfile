@@ -6,11 +6,13 @@ VOLUME /tmp
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
+RUN apk --no-cache add bash
+
 COPY run.sh run.sh
 RUN chmod u+x run.sh
 
-COPY ../../../target/admin-service.jar app.jar
+COPY admin-service.jar app.jar
 
 EXPOSE 8080
 
-CMD ["run.sh"]
+CMD ["./run.sh"]
