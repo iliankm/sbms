@@ -7,10 +7,10 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY run.sh run.sh
+RUN chmod u+x run.sh
 
 COPY ../../../target/admin-service.jar app.jar
 
-RUN chmod u+x run.sh
-
 EXPOSE 8080
+
 CMD ["run.sh"]
