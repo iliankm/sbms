@@ -58,7 +58,7 @@
 					<artifactId>docker-maven-plugin</artifactId>
 					<version>1.2.0</version>
 					<configuration>
-						<imageName>sbms/${artifactId}</imageName>
+						<imageName>sbms/${project.artifactId}</imageName>
 						<dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
 						<forceTags>true</forceTags>
 						<imageTags>
@@ -68,7 +68,7 @@
 							<resource>
 								<targetPath>/</targetPath>
 								<directory>${project.build.directory}</directory>
-								<include>${artifactId}.jar</include>
+								<include>${project.artifactId}.jar</include>
 							</resource>
 						</resources>
 					</configuration>
