@@ -1,4 +1,4 @@
-package com.iliankm.sbms.parser_service;
+package com.iliankm.sbms;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

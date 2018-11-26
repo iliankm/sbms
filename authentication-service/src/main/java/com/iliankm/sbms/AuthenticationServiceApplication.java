@@ -1,12 +1,12 @@
-package com.iliankm.sbms.operations_service;
+package com.iliankm.sbms;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class OperationsServiceApplication {
+public class AuthenticationServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(OperationsServiceApplication.class, args);
+        SpringApplication.run(AuthenticationServiceApplication.class, args);
     }
 }

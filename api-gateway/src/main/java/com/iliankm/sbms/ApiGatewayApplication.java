@@ -1,4 +1,4 @@
-package com.iliankm.sbms.api_gateway;
+package com.iliankm.sbms;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
