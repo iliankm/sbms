@@ -10,6 +10,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-client</artifactId>
+		</dependency>
+	
+		<dependency>
 			<groupId>com.iliankm.sbms</groupId>
 			<artifactId>commons</artifactId>
 		</dependency>
