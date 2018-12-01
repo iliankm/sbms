@@ -1,0 +1,81 @@
+version: '2'
+services:
+  admin-service:
+    image: sbms/admin-service
+    ports:
+      - "8081:8081"
+    environment:
+      - LOGGING_FILE=/var/log/admin-service.log
+      - PROFILE=local
+    volumes:
+      - ./logs:/var/log
+    mem_limit: 1g
+  api-gateway:
+    image: sbms/api-gateway
+    ports:
+      - "8080:8080"
+    links:
+      - admin-service
+      - authentication-service
+      - operations-service
+      - parser-service
+      - subscriber-service
+    environment:
+      - LOGGING_FILE=/var/log/api-gateway.log
+      - PROFILE=local
+      - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8081
+    volumes:
+      - ./logs:/var/log
+    mem_limit: 1g
+  authentication-service:
+    image: sbms/authentication-service
+    ports:
+      - "8082:8082"
+    links:
+      - admin-service
+    environment:
+      - LOGGING_FILE=/var/log/authentication-service.log
+      - PROFILE=local
+      - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8081
+    volumes:
+      - ./logs:/var/log
+    mem_limit: 1g
+  operations-service:
+    image: sbms/operations-service
+    ports:
+      - "8083:8083"
+    links:
+      - admin-service
+    environment:
+      - LOGGING_FILE=/var/log/operations-service.log
+      - PROFILE=local
+      - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8081
+    volumes:
+      - ./logs:/var/log
+    mem_limit: 1g
+  parser-service:
+    image: sbms/parser-service
+    ports:
+      - "8084:8084"
+    links:
+      - admin-service
+    environment:
+      - LOGGING_FILE=/var/log/parser-service.log
+      - PROFILE=local
+      - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8081
+    volumes:
+      - ./logs:/var/log
+    mem_limit: 1g
+  subscriber-service:
+    image: sbms/subscriber-service
+    ports:
+      - "8085:8085"
+    links:
+      - admin-service
+    environment:
+      - LOGGING_FILE=/var/log/subscriber-service.log
+      - PROFILE=local
+      - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8081
+    volumes:
+      - ./logs:/var/log
+    mem_limit: 1g
