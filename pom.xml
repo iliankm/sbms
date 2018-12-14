@@ -15,6 +15,7 @@
 	<properties>
 		<spring-boot-admin-version>2.0.0</spring-boot-admin-version>
 		<swagger2-version>2.9.2</swagger2-version>
+		<java-jwt-version>3.4.1</java-jwt-version>
 	</properties>
 
 	<modules>
@@ -55,6 +56,11 @@
 				<version>${swagger2-version}</version>
 			</dependency>
 			<dependency>
+				<groupId>com.auth0</groupId>
+				<artifactId>java-jwt</artifactId>
+				<version>${java-jwt-version}</version>
+			</dependency>
+			<dependency>
 				<groupId>com.iliankm.sbms</groupId>
 				<artifactId>commons</artifactId>
 				<version>${project.version}</version>
@@ -64,7 +70,7 @@
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
-		
+
 		<pluginManagement>
 			<plugins>
 				<plugin>
