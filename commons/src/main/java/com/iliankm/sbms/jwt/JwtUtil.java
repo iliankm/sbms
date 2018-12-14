@@ -3,7 +3,6 @@ package com.iliankm.sbms.jwt;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Set;
 import org.springframework.stereotype.Component;
@@ -16,17 +15,12 @@ public class JwtUtil {
     
     private static final String ISSUER = "sbms";
     private static final String CLAIM_ROLES = "ROLES";
+    private static final String CLAIM_IS_REFRESH_TOKEN = "CLAIM_IS_REFRESH_TOKEN";
     
     private final ApplicationProperties applicationProperties;
     
     public JwtUtil(ApplicationProperties applicationProperties) {
         this.applicationProperties = applicationProperties;
-    }
-    
-    public static void main(String[] args) {
-        System.out.println(LocalDateTime.now().atOffset(ZoneOffset.UTC));
-        System.out.println(Instant.now());
-        System.out.println(LocalDateTime.now().plusMinutes(15).atZone(ZoneId.systemDefault()).toInstant());
     }
     
     public String createAccessToken(String subject, Set<String> roles) {
@@ -51,7 +45,7 @@ public class JwtUtil {
     }
     
     public String createRefreshToken(String subject) {
-        
+
         try {
             Algorithm algorithm = Algorithm.HMAC256(applicationProperties.jwtSecret());
             
@@ -62,6 +56,7 @@ public class JwtUtil {
                                             .plusMinutes(applicationProperties.jwtRefreshTokenExpirationTime())
                                             .atZone(ZoneId.systemDefault()).toInstant()))
                             .withSubject(subject)
+                            .withClaim(CLAIM_IS_REFRESH_TOKEN, Boolean.TRUE)
                             .sign(algorithm);
             
             return token;
