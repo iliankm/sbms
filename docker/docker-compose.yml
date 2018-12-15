@@ -6,7 +6,7 @@ services:
       - "8081:8081"
     environment:
       - LOGGING_FILE=/var/log/admin-service.log
-      - PROFILE=local
+      - SPRING_PROFILES_ACTIVE=local
     volumes:
       - ./logs:/var/log
     mem_limit: 1g
@@ -22,7 +22,7 @@ services:
       - subscriber-service
     environment:
       - LOGGING_FILE=/var/log/api-gateway.log
-      - PROFILE=local
+      - SPRING_PROFILES_ACTIVE=local
       - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8081
     volumes:
       - ./logs:/var/log
@@ -35,7 +35,7 @@ services:
       - admin-service
     environment:
       - LOGGING_FILE=/var/log/authentication-service.log
-      - PROFILE=local
+      - SPRING_PROFILES_ACTIVE=local
       - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8081
     volumes:
       - ./logs:/var/log
@@ -48,7 +48,7 @@ services:
       - admin-service
     environment:
       - LOGGING_FILE=/var/log/operations-service.log
-      - PROFILE=local
+      - SPRING_PROFILES_ACTIVE=local
       - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8081
     volumes:
       - ./logs:/var/log
@@ -61,7 +61,7 @@ services:
       - admin-service
     environment:
       - LOGGING_FILE=/var/log/parser-service.log
-      - PROFILE=local
+      - SPRING_PROFILES_ACTIVE=local
       - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8081
     volumes:
       - ./logs:/var/log
@@ -74,7 +74,7 @@ services:
       - admin-service
     environment:
       - LOGGING_FILE=/var/log/subscriber-service.log
-      - PROFILE=local
+      - SPRING_PROFILES_ACTIVE=local
       - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8081
     volumes:
       - ./logs:/var/log
