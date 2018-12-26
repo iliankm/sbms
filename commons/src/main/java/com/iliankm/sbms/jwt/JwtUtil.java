@@ -3,11 +3,15 @@ package com.iliankm.sbms.jwt;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import org.springframework.stereotype.Component;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.iliankm.sbms.utils.ApplicationProperties;
 
 @Component
@@ -19,15 +23,16 @@ public class JwtUtil {
     
     private final ApplicationProperties applicationProperties;
     
+    private final Algorithm algorithm;
+    
     public JwtUtil(ApplicationProperties applicationProperties) {
         this.applicationProperties = applicationProperties;
+        this.algorithm = Algorithm.HMAC256(applicationProperties.jwtSecret());
     }
     
     public String createAccessToken(String subject, Set<String> roles) {
         
         try {
-            Algorithm algorithm = Algorithm.HMAC256(applicationProperties.jwtSecret());
-            
             String token = JWT.create()
                             .withIssuer(ISSUER)
                             .withNotBefore(Date.from(Instant.now()))
@@ -47,8 +52,6 @@ public class JwtUtil {
     public String createRefreshToken(String subject) {
 
         try {
-            Algorithm algorithm = Algorithm.HMAC256(applicationProperties.jwtSecret());
-            
             String token = JWT.create()
                             .withIssuer(ISSUER)
                             .withNotBefore(Date.from(Instant.now()))
@@ -63,6 +66,21 @@ public class JwtUtil {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }        
+    }
+    
+    public DecodedJWT decodeToken(String token) {
+        
+        return JWT.require(algorithm).withIssuer(ISSUER).build().verify(token);
+    }
+    
+    public Set<String> getRoles(DecodedJWT decodedJWT) {
+        Claim claim = decodedJWT.getClaim(CLAIM_ROLES);
+        return !claim.isNull() ? Collections.unmodifiableSet(new HashSet<String>(claim.asList(String.class))) : Collections.emptySet();
+    }
+    
+    public boolean isRefreshToken(DecodedJWT decodedJWT) {
+        Claim claim = decodedJWT.getClaim(CLAIM_IS_REFRESH_TOKEN);
+        return !claim.isNull() ? claim.asBoolean().booleanValue() : false;
     }
 
 }
