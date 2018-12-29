@@ -19,7 +19,7 @@ import com.iliankm.sbms.jwt.JwtUtil;
 @PropertySource(value = "classpath:users.properties")
 @ConfigurationProperties("")
 public class LoginService {
-    
+
     private static final String MSG_INVALID_USERNAME_PASSWORD = "Invalid username or password.";
 
     private final JwtUtil jwtUtil;
@@ -34,18 +34,23 @@ public class LoginService {
 
     public JwtDTO login(LoginDTO loginDTO) {
 
-        if (users.containsKey(loginDTO.getUsername())) {
-            
-            if (java.util.Base64.getEncoder().encodeToString(loginDTO.getPassword().getBytes())
-                            .equals(users.get(loginDTO.getUsername()))) {
-                
-                String accessToken = jwtUtil.createAccessToken(loginDTO.getUsername(), getUserRoles(loginDTO.getUsername()));
-                String refreshToken = jwtUtil.createRefreshToken(loginDTO.getUsername());
+        if (loginDTO != null && StringUtils.hasText(loginDTO.getUsername())
+                        && StringUtils.hasText(loginDTO.getPassword())) {
 
-                return new JwtDTO(accessToken, refreshToken);
+            if (users.containsKey(loginDTO.getUsername())) {
+
+                if (java.util.Base64.getEncoder().encodeToString(loginDTO.getPassword().getBytes())
+                                .equals(users.get(loginDTO.getUsername()))) {
+
+                    String accessToken = jwtUtil.createAccessToken(loginDTO.getUsername(),
+                                    getUserRoles(loginDTO.getUsername()));
+                    String refreshToken = jwtUtil.createRefreshToken(loginDTO.getUsername());
+
+                    return new JwtDTO(accessToken, refreshToken);
+                }
             }
         }
-        
+
         throw new UnauthorizedException(MSG_INVALID_USERNAME_PASSWORD);
     }
 
@@ -58,9 +63,9 @@ public class LoginService {
     }
 
     private Set<String> getUserRoles(String username) {
-        
+
         String rolesString = roles.get(username);
-        
+
         return StringUtils.isEmpty(rolesString) ? Collections.emptySet()
                         : new HashSet<>(Arrays.asList(rolesString.split(",")));
     }
