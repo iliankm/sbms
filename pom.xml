@@ -16,6 +16,7 @@
 		<spring-boot-admin-version>2.0.0</spring-boot-admin-version>
 		<swagger2-version>2.9.2</swagger2-version>
 		<java-jwt-version>3.4.1</java-jwt-version>
+		<commons-lang-version>3.5</commons-lang-version>
 	</properties>
 
 	<modules>
@@ -60,6 +61,12 @@
 				<artifactId>java-jwt</artifactId>
 				<version>${java-jwt-version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons-lang-version}</version>
+			</dependency>
+
 			<dependency>
 				<groupId>com.iliankm.sbms</groupId>
 				<artifactId>commons</artifactId>
