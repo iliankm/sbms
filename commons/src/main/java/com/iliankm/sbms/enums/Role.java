@@ -1,4 +1,4 @@
-package com.iliankm.sbms.config;
+package com.iliankm.sbms.enums;
 
 public enum Role {
     ADMIN, SYSTEM, USER
