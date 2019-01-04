@@ -3,11 +3,13 @@ package com.iliankm.sbms.jwt;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StringUtils;
 import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.iliankm.sbms.config.ApplicationPropertiesTestConfig;
 import com.iliankm.sbms.utils.ApplicationProperties;
@@ -65,6 +68,18 @@ public class JwtUtilTest {
     @Test(expected = JWTDecodeException.class)
     public void decodeInvalidToken_Test() {
         jwtUtil.decodeToken("");
+    }
+    
+    @Test(expected = TokenExpiredException.class)
+    public void decodeExpiredToken_Test() throws InterruptedException {
+        //given
+        ApplicationProperties applicationProperties = Mockito.mock(ApplicationProperties.class);
+        when(applicationProperties.jwtAccessTokenExpirationTime()).thenReturn(-1);
+        when(applicationProperties.jwtSecret()).thenReturn("SECRET");
+        JwtUtil jwtUtil = new JwtUtil(applicationProperties);
+        String jwt = jwtUtil.createAccessToken(SUBJECT, new HashSet<>(Arrays.asList(ROLE)));
+        //when
+        jwtUtil.decodeToken(jwt);
     }
     
     @Test
