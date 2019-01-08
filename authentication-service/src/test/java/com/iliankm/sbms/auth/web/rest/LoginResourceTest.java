@@ -14,10 +14,7 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -29,16 +26,14 @@ import com.iliankm.sbms.auth.service.LoginService;
 import com.iliankm.sbms.config.ApplicationPropertiesTestConfig;
 import com.iliankm.sbms.config.WebSecurityConfig;
 import com.iliankm.sbms.exception.UnauthorizedException;
-import com.iliankm.sbms.jwt.JwtUtil;
-import com.iliankm.sbms.utils.ApplicationProperties;
-import com.iliankm.sbms.web.filter.AuthenticationFilter;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = LoginResource.class, secure = false)
+@WebMvcTest(value = LoginResource.class, secure = true)
+@Import({ApplicationPropertiesTestConfig.class, WebSecurityConfig.class})
 @ActiveProfiles({"test"})
 public class LoginResourceTest {
 
-    private static final String BASE_URL = "/api/v1/login";
+    private static final String BASE_URL = "/api-no-auth/v1/login";
     
     private static final String LOGIN_DTO = "{\"username\":\"%s\",\"password\":\"%s\"}";
     
@@ -56,27 +51,6 @@ public class LoginResourceTest {
     @MockBean
     private LoginService loginService;
     
-    @Profile({"test"})
-    @Configuration
-    @Import({ApplicationPropertiesTestConfig.class, WebSecurityConfig.class})
-    public static class TestConfiguration {
-        @Bean
-        public ApplicationProperties applicationProperties() {
-            return new ApplicationProperties();
-        }
-
-        @Bean
-        public JwtUtil jwtUtil() {
-            return new JwtUtil(applicationProperties());
-        }
-
-        @Bean
-        public AuthenticationFilter authenticationFilter() {
-            return new AuthenticationFilter(jwtUtil());
-        }
-    }
-    
-
     @Test
     public void try_login_No_Request_Body_Test() throws Exception {
         mvc.perform(post(BASE_URL).contentType(MediaType.APPLICATION_JSON).content(""))
