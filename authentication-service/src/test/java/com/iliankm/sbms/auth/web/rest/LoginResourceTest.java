@@ -1,4 +1,4 @@
-package com.iliankm.sbms.auth.web.res;
+package com.iliankm.sbms.auth.web.rest;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -14,6 +14,10 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -22,8 +26,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.iliankm.sbms.auth.dto.JwtDTO;
 import com.iliankm.sbms.auth.dto.LoginDTO;
 import com.iliankm.sbms.auth.service.LoginService;
-import com.iliankm.sbms.auth.web.rest.LoginResource;
+import com.iliankm.sbms.config.ApplicationPropertiesTestConfig;
+import com.iliankm.sbms.config.WebSecurityConfig;
 import com.iliankm.sbms.exception.UnauthorizedException;
+import com.iliankm.sbms.jwt.JwtUtil;
+import com.iliankm.sbms.utils.ApplicationProperties;
+import com.iliankm.sbms.web.filter.AuthenticationFilter;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = LoginResource.class, secure = false)
@@ -47,6 +55,27 @@ public class LoginResourceTest {
 
     @MockBean
     private LoginService loginService;
+    
+    @Profile({"test"})
+    @Configuration
+    @Import({ApplicationPropertiesTestConfig.class, WebSecurityConfig.class})
+    public static class TestConfiguration {
+        @Bean
+        public ApplicationProperties applicationProperties() {
+            return new ApplicationProperties();
+        }
+
+        @Bean
+        public JwtUtil jwtUtil() {
+            return new JwtUtil(applicationProperties());
+        }
+
+        @Bean
+        public AuthenticationFilter authenticationFilter() {
+            return new AuthenticationFilter(jwtUtil());
+        }
+    }
+    
 
     @Test
     public void try_login_No_Request_Body_Test() throws Exception {
