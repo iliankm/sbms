@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.auth0.jwt.exceptions.AlgorithmMismatchException;
@@ -23,6 +24,7 @@ public class ResponseEntityExceptionHandler extends
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private static final String MSG_INVALID_TOKEN = "Invalid token.";
     private static final String MSG_TOKEN_EXPIRED = "Token expired.";
+    private static final String MSG_NO_RIGHTS = "No permission to access the requested resource.";
 
     @ExceptionHandler({RuntimeException.class})
     public ResponseEntity<Object> handleRuntimeException(Exception ex) {
@@ -54,6 +56,12 @@ public class ResponseEntityExceptionHandler extends
     public ResponseEntity<Object> handleUnauthorizedException(Exception ex) {
         log.warn(ex.getMessage(), ex);
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+    
+    @ExceptionHandler({AccessDeniedException.class})
+    public ResponseEntity<Object> handleAccessDeniedException(Exception ex) {
+        log.warn(ex.getMessage(), ex);
+        return new ResponseEntity<>(MSG_NO_RIGHTS, HttpStatus.FORBIDDEN);
     }
 
 }
