@@ -1,5 +1,9 @@
 package com.iliankm.sbms.enums;
 
 public enum Role {
-    ADMIN, SYSTEM, USER
+    TEST, ADMIN, SYSTEM, USER;
+    
+    public String getSpringSecurityName() {
+        return "ROLE_" + name();
+    }
 }

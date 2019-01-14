@@ -12,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -48,13 +47,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             RequestContextHolder.getRequestAttributes().setAttribute("jwt", authorizationHeader, RequestAttributes.SCOPE_REQUEST);
             
             //roles as set of GrantedAuthority
-            Set<GrantedAuthority> authorities = jwtUtil.getRoles(decodedJwt).stream().map(SimpleGrantedAuthority::new)
+            Set<GrantedAuthority> authorities = jwtUtil.getRoles(decodedJwt).stream().map(s -> new SimpleGrantedAuthority(s))
                             .collect(Collectors.toSet());
             //create Spring Security Authentication
             UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(decodedJwt.getSubject(), null, authorities);
             
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             //set Spring Security Authentication to the security context
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
