@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,9 +26,7 @@ import com.iliankm.sbms.utils.RequestAttributesUtil;
 public class AuthenticationFilter extends OncePerRequestFilter {
     
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-    private static final String HEADER_AUTHORIZATION = "Authorization";
-    
+   
     private static final String HEADER_SWAGGER_AUTHORIZATION = "api_key";
     
     private static final String MSG_INVALID_TOKEN = "Invalid token.";
@@ -47,7 +46,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         try {
             //determine the auth. header
             String authorizationHeader =
-                            ObjectUtils.firstNonNull(request.getHeader(HEADER_AUTHORIZATION), request.getHeader(HEADER_SWAGGER_AUTHORIZATION));
+                            ObjectUtils.firstNonNull(request.getHeader(HttpHeaders.AUTHORIZATION), request.getHeader(HEADER_SWAGGER_AUTHORIZATION));
 
             if (StringUtils.hasText(authorizationHeader)) {
                 //try decode the token

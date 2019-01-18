@@ -4,6 +4,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.isEmptyString;
 import java.util.Arrays;
 import java.util.HashSet;
 import org.junit.Test;
@@ -12,14 +14,15 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import com.google.common.net.HttpHeaders;
 import com.iliankm.sbms.config.ApplicationPropertiesTestConfig;
+import com.iliankm.sbms.config.FilterConfig;
 import com.iliankm.sbms.config.WebSecurityConfig;
 import com.iliankm.sbms.enums.Role;
 import com.iliankm.sbms.jwt.JwtUtil;
@@ -29,15 +32,21 @@ import com.iliankm.sbms.web.ResponseEntityExceptionHandler;
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = EchoResource.class, secure = true)
 @ContextConfiguration(classes= {ResponseEntityExceptionHandler.class, EchoResource.class})
-@Import({ApplicationPropertiesTestConfig.class, WebSecurityConfig.class})
+@Import({ApplicationPropertiesTestConfig.class, WebSecurityConfig.class, FilterConfig.class})
 @ActiveProfiles({"test"})
 public class EchoResourceTest {
 
     private static final String NO_AUTH_URL = "/api-no-auth/v1/echo";
     
+    private static final String CORRELATION_ID_ECHO_URL = "/api-no-auth/v1/echo/correlation-id";
+    
     private static final String URL = "/api/v1/echo";
     
     private static final String QUERY_PARAM_NAME = "q";
+    
+    private static final String HEADER_CORREATION_ID = "Correlation-Id";
+    
+    private static final String CORREATION_ID = "d895bf77-0dee-470f-bb7e-4a7efcc749e3";
     
     @Autowired
     private MockMvc mvc;
@@ -106,6 +115,23 @@ public class EchoResourceTest {
         //then
         result.andExpect(status().isOk());
         result.andExpect(content().string("aaa"));
+    }
+    
+    @Test
+    public void echo_Correltation_Id_Passed_In_Header() throws Exception {
+        mvc.perform(get(CORRELATION_ID_ECHO_URL)
+                        .header(HEADER_CORREATION_ID, CORREATION_ID)
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(content().string(CORREATION_ID));
+    }
+    
+    @Test
+    public void echo_Correltation_Id_Not_Passed_In_Header() throws Exception {
+        mvc.perform(get(CORRELATION_ID_ECHO_URL)
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(content().string(not(isEmptyString())));
     }
 
 }
