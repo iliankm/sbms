@@ -1,0 +1,14 @@
+<configuration>
+
+	<timestamp key="date" datePattern="yyyyMMdd" />
+
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [correlation.id=%X{correlation.id}] %thread %level %logger{15}%msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<root level="INFO">
+		<appender-ref ref="stdout" />
+	</root>
+</configuration>

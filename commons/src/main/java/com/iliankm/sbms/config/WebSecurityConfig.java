@@ -5,6 +5,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -17,6 +18,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.iliankm.sbms.jwt.JwtUtil;
 import com.iliankm.sbms.utils.ApplicationProperties;
+import com.iliankm.sbms.utils.RequestAttributesUtil;
 import com.iliankm.sbms.web.filter.AuthenticationFilter;
 
 @Configuration
@@ -38,7 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
                     ServletOutputStream stream = response.getOutputStream();
-                    stream.println("Unauthorized");
+                    stream.println(ObjectUtils.firstNonNull(RequestAttributesUtil.get(RequestAttributesUtil.NO_AUTH_MESSAGE), "Unauthorized"));
                     stream.close();                    
                 }})
             
