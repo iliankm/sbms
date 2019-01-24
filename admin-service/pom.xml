@@ -21,12 +21,6 @@
 			<groupId>de.codecentric</groupId>
 			<artifactId>spring-boot-admin-server-ui</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>com.iliankm.sbms</groupId>
-			<artifactId>commons</artifactId>
-		</dependency>
-
 	</dependencies>
 
 	<build>

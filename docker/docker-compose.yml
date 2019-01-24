@@ -37,6 +37,7 @@ services:
       - LOGGING_FILE=/var/log/authentication-service.log
       - SPRING_PROFILES_ACTIVE=local
       - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8081
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     volumes:
       - ./logs:/var/log
     mem_limit: 1g
@@ -50,6 +51,7 @@ services:
       - LOGGING_FILE=/var/log/operations-service.log
       - SPRING_PROFILES_ACTIVE=local
       - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8081
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     volumes:
       - ./logs:/var/log
     mem_limit: 1g
@@ -63,6 +65,7 @@ services:
       - LOGGING_FILE=/var/log/parser-service.log
       - SPRING_PROFILES_ACTIVE=local
       - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8081
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     volumes:
       - ./logs:/var/log
     mem_limit: 1g
@@ -76,6 +79,7 @@ services:
       - LOGGING_FILE=/var/log/subscriber-service.log
       - SPRING_PROFILES_ACTIVE=local
       - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8081
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     volumes:
       - ./logs:/var/log
     mem_limit: 1g
