@@ -1,4 +1,4 @@
-package com.iliankm.sbms.jwt;
+package com.iliankm.sbms.service;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
