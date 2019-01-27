@@ -27,11 +27,12 @@ import com.iliankm.sbms.config.WebSecurityConfig;
 import com.iliankm.sbms.enums.Role;
 import com.iliankm.sbms.jwt.JwtUtil;
 import com.iliankm.sbms.utils.ApplicationProperties;
+import com.iliankm.sbms.utils.RequestAttributesUtil;
 import com.iliankm.sbms.web.ResponseEntityExceptionHandler;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = EchoResource.class, secure = true)
-@ContextConfiguration(classes= {ResponseEntityExceptionHandler.class, EchoResource.class})
+@ContextConfiguration(classes= {ResponseEntityExceptionHandler.class, RequestAttributesUtil.class, EchoResource.class})
 @Import({ApplicationPropertiesTestConfig.class, WebSecurityConfig.class, FilterConfig.class})
 @ActiveProfiles({"test"})
 public class EchoResourceTest {

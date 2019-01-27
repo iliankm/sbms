@@ -11,6 +11,12 @@ import com.iliankm.sbms.utils.RequestAttributesUtil;
 @RequestMapping("")
 public class EchoResource {
     
+    private RequestAttributesUtil requestAttributesUtil;
+    
+    public EchoResource(RequestAttributesUtil requestAttributesUtil) {
+        this.requestAttributesUtil = requestAttributesUtil;  
+    }
+    
     @GetMapping("api-no-auth/v1/echo")
     public String echoNoAuth(@RequestParam("q") String q) {
         return q;
@@ -18,7 +24,7 @@ public class EchoResource {
     
     @GetMapping("api-no-auth/v1/echo/correlation-id")
     public String echoCorrelationId() {
-        return RequestAttributesUtil.get(RequestAttributesUtil.CORRELATION_ID);
+        return requestAttributesUtil.get(RequestAttributesUtil.CORRELATION_ID);
     }
     
     @PreAuthorize("hasAnyRole('ADMIN','TEST')")

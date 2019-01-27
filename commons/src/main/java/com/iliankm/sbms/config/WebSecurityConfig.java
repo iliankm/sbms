@@ -40,7 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
                     ServletOutputStream stream = response.getOutputStream();
-                    stream.println(ObjectUtils.firstNonNull(RequestAttributesUtil.get(RequestAttributesUtil.NO_AUTH_MESSAGE), "Unauthorized"));
+                    stream.println(ObjectUtils.firstNonNull(requestAttributesUtil().get(RequestAttributesUtil.NO_AUTH_MESSAGE), "Unauthorized"));
                     stream.close();                    
                 }})
             
@@ -71,7 +71,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthenticationFilter authenticationFilter() {
-        return new AuthenticationFilter(jwtUtil());
+        return new AuthenticationFilter(jwtUtil(), requestAttributesUtil());
+    }
+    
+    @Bean
+    public RequestAttributesUtil requestAttributesUtil() {
+        return new RequestAttributesUtil();
     }
     
     

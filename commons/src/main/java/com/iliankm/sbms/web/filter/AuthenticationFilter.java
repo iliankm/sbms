@@ -34,9 +34,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private static final String MSG_TOKEN_EXPIRED = "Token expired.";
 
     private final JwtUtil jwtUtil;
+    
+    private final RequestAttributesUtil requestAttributesUtil;
 
-    public AuthenticationFilter(JwtUtil jwtUtil) {
+    public AuthenticationFilter(JwtUtil jwtUtil, RequestAttributesUtil requestAttributesUtil) {
         this.jwtUtil = jwtUtil;
+        this.requestAttributesUtil = requestAttributesUtil;
     }
 
     @Override
@@ -54,17 +57,17 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 try {
                     decodedJwt = jwtUtil.decodeToken(authorizationHeader);    
                 } catch (TokenExpiredException te) {
-                    RequestAttributesUtil.set(RequestAttributesUtil.NO_AUTH_MESSAGE, MSG_TOKEN_EXPIRED);
+                    requestAttributesUtil.set(RequestAttributesUtil.NO_AUTH_MESSAGE, MSG_TOKEN_EXPIRED);
                     log.warn(te.getMessage());
                     return;
                 } catch (JWTVerificationException e) {
-                    RequestAttributesUtil.set(RequestAttributesUtil.NO_AUTH_MESSAGE, MSG_INVALID_TOKEN);
+                    requestAttributesUtil.set(RequestAttributesUtil.NO_AUTH_MESSAGE, MSG_INVALID_TOKEN);
                     log.error(e.getMessage());
                     return;
                 }
                 
                 //set the jwt to thread-bound request attribute
-                RequestAttributesUtil.set(RequestAttributesUtil.JWT, authorizationHeader);
+                requestAttributesUtil.set(RequestAttributesUtil.JWT, authorizationHeader);
                 
                 //roles as set of GrantedAuthority
                 Set<GrantedAuthority> authorities = jwtUtil.getRoles(decodedJwt).stream()

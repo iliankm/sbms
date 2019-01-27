@@ -15,6 +15,12 @@ import java.util.UUID;
 public class CorrelationFilter extends OncePerRequestFilter {
 
     private static final String HEADER_CORREATION_ID = "Correlation-Id";
+    
+    private RequestAttributesUtil requestAttributesUtil;
+    
+    public CorrelationFilter(RequestAttributesUtil requestAttributesUtil) {
+        this.requestAttributesUtil = requestAttributesUtil;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -26,7 +32,7 @@ public class CorrelationFilter extends OncePerRequestFilter {
                             StringUtils.defaultIfBlank(request.getHeader(HEADER_CORREATION_ID), null),
                             UUID.randomUUID().toString());
             // set it to thread-bound request attribute
-            RequestAttributesUtil.set(RequestAttributesUtil.CORRELATION_ID, correlationId);
+            requestAttributesUtil.set(RequestAttributesUtil.CORRELATION_ID, correlationId);
             // set it to slf4j
             MDC.put("correlation.id", correlationId);
 
