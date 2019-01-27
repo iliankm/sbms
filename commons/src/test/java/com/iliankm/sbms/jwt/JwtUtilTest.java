@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
@@ -37,17 +36,7 @@ public class JwtUtilTest {
     @Profile({"test"})
     @Configuration
     @Import(ApplicationPropertiesTestConfig.class)
-    public static class TestConfiguration {
-        @Bean
-        public ApplicationProperties applicationProperties() {
-            return new ApplicationProperties();
-        }
-
-        @Bean
-        public JwtUtil jwtUtil() {
-            return new JwtUtil(applicationProperties());
-        }
-    }
+    public static class TestConfiguration {}
     
     @Test
     public void createAccessToken_Test() {

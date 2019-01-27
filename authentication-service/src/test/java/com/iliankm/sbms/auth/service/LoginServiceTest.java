@@ -20,7 +20,6 @@ import com.iliankm.sbms.auth.dto.LoginDTO;
 import com.iliankm.sbms.config.ApplicationPropertiesTestConfig;
 import com.iliankm.sbms.exception.UnauthorizedException;
 import com.iliankm.sbms.jwt.JwtUtil;
-import com.iliankm.sbms.utils.ApplicationProperties;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles({"test"})
@@ -40,19 +39,10 @@ public class LoginServiceTest {
     @Configuration
     @Import(ApplicationPropertiesTestConfig.class)
     public static class TestConfiguration {
+        
         @Bean
-        public ApplicationProperties applicationProperties() {
-            return new ApplicationProperties();
-        }
-
-        @Bean
-        public JwtUtil jwtUtil() {
-            return new JwtUtil(applicationProperties());
-        }
-
-        @Bean
-        public LoginService loginService() {
-            LoginService loginService = new LoginService(jwtUtil());
+        public LoginService loginService(JwtUtil jwtUtil) {
+            LoginService loginService = new LoginService(jwtUtil);
             loginService.getUsers().put(USER_NAME, PASSWORD_HASHED);
             loginService.getRoles().put(USER_NAME, ROLE_USER);
             return loginService;
