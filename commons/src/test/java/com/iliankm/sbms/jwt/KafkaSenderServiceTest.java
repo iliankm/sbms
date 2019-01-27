@@ -13,7 +13,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.concurrent.ListenableFuture;
-import com.iliankm.sbms.config.ApplicationPropertiesTestConfig;
+import com.iliankm.sbms.config.ApplicationTestConfig;
 import com.iliankm.sbms.enums.Topic;
 import com.iliankm.sbms.service.KafkaSenderService;
 import com.iliankm.sbms.utils.RequestAttributesUtil;
@@ -30,7 +30,7 @@ public class KafkaSenderServiceTest {
     
     @Profile({"test"})
     @Configuration
-    @Import(ApplicationPropertiesTestConfig.class)
+    @Import(ApplicationTestConfig.class)
     public static class TestConfiguration {
         
         @SuppressWarnings("unchecked")

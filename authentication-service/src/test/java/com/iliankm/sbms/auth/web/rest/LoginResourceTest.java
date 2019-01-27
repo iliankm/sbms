@@ -23,14 +23,14 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.iliankm.sbms.auth.dto.JwtDTO;
 import com.iliankm.sbms.auth.dto.LoginDTO;
 import com.iliankm.sbms.auth.service.LoginService;
-import com.iliankm.sbms.config.ApplicationPropertiesTestConfig;
+import com.iliankm.sbms.config.ApplicationTestConfig;
 import com.iliankm.sbms.config.FilterConfig;
 import com.iliankm.sbms.config.WebSecurityConfig;
 import com.iliankm.sbms.exception.UnauthorizedException;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = LoginResource.class, secure = true)
-@Import({ApplicationPropertiesTestConfig.class, WebSecurityConfig.class, FilterConfig.class})
+@Import({ApplicationTestConfig.class, WebSecurityConfig.class, FilterConfig.class})
 @ActiveProfiles({"test"})
 public class LoginResourceTest {
 

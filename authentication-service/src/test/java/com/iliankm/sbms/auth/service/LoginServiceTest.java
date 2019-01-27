@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.iliankm.sbms.auth.dto.JwtDTO;
 import com.iliankm.sbms.auth.dto.LoginDTO;
-import com.iliankm.sbms.config.ApplicationPropertiesTestConfig;
+import com.iliankm.sbms.config.ApplicationTestConfig;
 import com.iliankm.sbms.exception.UnauthorizedException;
 import com.iliankm.sbms.jwt.JwtUtil;
 
@@ -37,7 +37,7 @@ public class LoginServiceTest {
 
     @Profile({"test"})
     @Configuration
-    @Import(ApplicationPropertiesTestConfig.class)
+    @Import(ApplicationTestConfig.class)
     public static class TestConfiguration {
         
         @Bean

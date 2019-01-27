@@ -20,7 +20,7 @@ import org.springframework.util.StringUtils;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.iliankm.sbms.config.ApplicationPropertiesTestConfig;
+import com.iliankm.sbms.config.ApplicationTestConfig;
 import com.iliankm.sbms.utils.ApplicationProperties;
 
 @RunWith(SpringRunner.class)
@@ -35,7 +35,7 @@ public class JwtUtilTest {
 
     @Profile({"test"})
     @Configuration
-    @Import(ApplicationPropertiesTestConfig.class)
+    @Import(ApplicationTestConfig.class)
     public static class TestConfiguration {}
     
     @Test

@@ -21,7 +21,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import com.iliankm.sbms.config.ApplicationPropertiesTestConfig;
+import com.iliankm.sbms.config.ApplicationTestConfig;
 import com.iliankm.sbms.config.FilterConfig;
 import com.iliankm.sbms.config.WebSecurityConfig;
 import com.iliankm.sbms.enums.Role;
@@ -31,7 +31,7 @@ import com.iliankm.sbms.utils.ApplicationProperties;
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = EchoResource.class, secure = true)
 @ContextConfiguration(classes= {EchoResource.class})
-@Import({ApplicationPropertiesTestConfig.class, WebSecurityConfig.class, FilterConfig.class})
+@Import({ApplicationTestConfig.class, WebSecurityConfig.class, FilterConfig.class})
 @ActiveProfiles({"test"})
 public class EchoResourceTest {
 
