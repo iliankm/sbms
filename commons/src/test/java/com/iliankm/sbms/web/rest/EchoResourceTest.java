@@ -1,11 +1,11 @@
 package com.iliankm.sbms.web.rest;
 
+import static org.hamcrest.Matchers.isEmptyString;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.isEmptyString;
 import java.util.Arrays;
 import java.util.HashSet;
 import org.junit.Test;
@@ -27,12 +27,10 @@ import com.iliankm.sbms.config.WebSecurityConfig;
 import com.iliankm.sbms.enums.Role;
 import com.iliankm.sbms.jwt.JwtUtil;
 import com.iliankm.sbms.utils.ApplicationProperties;
-import com.iliankm.sbms.utils.RequestAttributesUtil;
-import com.iliankm.sbms.web.ResponseEntityExceptionHandler;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = EchoResource.class, secure = true)
-@ContextConfiguration(classes= {ResponseEntityExceptionHandler.class, RequestAttributesUtil.class, EchoResource.class})
+@ContextConfiguration(classes= {EchoResource.class})
 @Import({ApplicationPropertiesTestConfig.class, WebSecurityConfig.class, FilterConfig.class})
 @ActiveProfiles({"test"})
 public class EchoResourceTest {

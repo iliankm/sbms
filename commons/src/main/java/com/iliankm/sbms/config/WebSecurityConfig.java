@@ -16,15 +16,23 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.iliankm.sbms.jwt.JwtUtil;
-import com.iliankm.sbms.utils.ApplicationProperties;
 import com.iliankm.sbms.utils.RequestAttributesUtil;
+import com.iliankm.sbms.web.ResponseEntityExceptionHandler;
 import com.iliankm.sbms.web.filter.AuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    
+    private final RequestAttributesUtil requestAttributesUtil;
+    
+    private final AuthenticationFilter authenticationFilter;
+    
+    public WebSecurityConfig(RequestAttributesUtil requestAttributesUtil, AuthenticationFilter authenticationFilter) {
+        this.requestAttributesUtil = requestAttributesUtil;
+        this.authenticationFilter = authenticationFilter;
+    }
     
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -40,7 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
                     ServletOutputStream stream = response.getOutputStream();
-                    stream.println(ObjectUtils.firstNonNull(requestAttributesUtil().get(RequestAttributesUtil.NO_AUTH_MESSAGE), "Unauthorized"));
+                    stream.println(ObjectUtils.firstNonNull(requestAttributesUtil.get(RequestAttributesUtil.NO_AUTH_MESSAGE), "Unauthorized"));
                     stream.close();                    
                 }})
             
@@ -53,31 +61,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/api-no-auth/**").permitAll();
 
         //custom auth. filter for parsing/resolving JWT
-        httpSecurity.addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         //disable page caching
         httpSecurity.headers().cacheControl();
     }
     
     @Bean
-    public ApplicationProperties applicationProperties() {
-        return new ApplicationProperties();
+    public ResponseEntityExceptionHandler responseEntityExceptionHandler() {
+        return new ResponseEntityExceptionHandler();
     }
-
-    @Bean
-    public JwtUtil jwtUtil() {
-        return new JwtUtil(applicationProperties());
-    }
-
-    @Bean
-    public AuthenticationFilter authenticationFilter() {
-        return new AuthenticationFilter(jwtUtil(), requestAttributesUtil());
-    }
-    
-    @Bean
-    public RequestAttributesUtil requestAttributesUtil() {
-        return new RequestAttributesUtil();
-    }
-    
     
 }
