@@ -21,5 +21,9 @@ public class RequestAttributesUtil {
     public <T> T get(String name) {
         return (T) RequestContextHolder.getRequestAttributes().getAttribute(name, RequestAttributes.SCOPE_REQUEST);
     }
+    
+    public void reset() {
+        RequestContextHolder.resetRequestAttributes();
+    }
 
 }

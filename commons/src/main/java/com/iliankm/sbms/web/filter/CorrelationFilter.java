@@ -14,7 +14,9 @@ import java.util.UUID;
 
 public class CorrelationFilter extends OncePerRequestFilter {
 
-    private static final String HEADER_CORREATION_ID = "Correlation-Id";
+    private static final String HEADER_CORRELATION_ID = "Correlation-Id";
+    
+    private static final String LOG_KEY_CORRELATION_ID = "correlation.id";
     
     private RequestAttributesUtil requestAttributesUtil;
     
@@ -29,17 +31,18 @@ public class CorrelationFilter extends OncePerRequestFilter {
         try {
             // get/generate corellation id
             final String correlationId = ObjectUtils.firstNonNull(
-                            StringUtils.defaultIfBlank(request.getHeader(HEADER_CORREATION_ID), null),
+                            StringUtils.defaultIfBlank(request.getHeader(HEADER_CORRELATION_ID), null),
                             UUID.randomUUID().toString());
             // set it to thread-bound request attribute
             requestAttributesUtil.set(RequestAttributesUtil.CORRELATION_ID, correlationId);
             // set it to slf4j
-            MDC.put("correlation.id", correlationId);
+            MDC.put(LOG_KEY_CORRELATION_ID, correlationId);
 
             chain.doFilter(request, response);
 
         } finally {
             MDC.clear();
+            requestAttributesUtil.reset();
         }
     }
 
