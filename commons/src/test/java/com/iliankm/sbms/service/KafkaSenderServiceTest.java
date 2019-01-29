@@ -1,7 +1,10 @@
 package com.iliankm.sbms.service;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +28,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.concurrent.ListenableFuture;
 import com.iliankm.sbms.config.ApplicationTestConfig;
 import com.iliankm.sbms.enums.Topic;
-import com.iliankm.sbms.service.KafkaSenderService;
 import com.iliankm.sbms.utils.RequestAttributesUtil;
 
 @RunWith(SpringRunner.class)
