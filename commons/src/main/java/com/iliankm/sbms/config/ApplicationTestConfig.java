@@ -7,7 +7,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import com.iliankm.sbms.jwt.JwtUtil;
 import com.iliankm.sbms.utils.ApplicationProperties;
-import com.iliankm.sbms.utils.RequestAttributesUtil;
 
 @Profile({"test"})
 @Configuration
@@ -27,11 +26,6 @@ public class ApplicationTestConfig {
     @Bean
     public JwtUtil jwtUtil() {
         return new JwtUtil(applicationProperties());
-    }
-    
-    @Bean
-    public RequestAttributesUtil requestAttributesUtil() {
-        return new RequestAttributesUtil();
     }
 
 }

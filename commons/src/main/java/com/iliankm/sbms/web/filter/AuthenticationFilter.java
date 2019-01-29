@@ -35,11 +35,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     
-    private final RequestAttributesUtil requestAttributesUtil;
-
-    public AuthenticationFilter(JwtUtil jwtUtil, RequestAttributesUtil requestAttributesUtil) {
+    public AuthenticationFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
-        this.requestAttributesUtil = requestAttributesUtil;
     }
 
     @Override
@@ -57,16 +54,16 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 try {
                     decodedJwt = jwtUtil.decodeToken(authorizationHeader);    
                 } catch (TokenExpiredException te) {
-                    requestAttributesUtil.set(RequestAttributesUtil.NO_AUTH_MESSAGE, MSG_TOKEN_EXPIRED);
+                    RequestAttributesUtil.setNoAuthMessage(MSG_TOKEN_EXPIRED);
                     log.warn(te.getMessage());
                 } catch (JWTVerificationException e) {
-                    requestAttributesUtil.set(RequestAttributesUtil.NO_AUTH_MESSAGE, MSG_INVALID_TOKEN);
+                    RequestAttributesUtil.setNoAuthMessage(MSG_INVALID_TOKEN);
                     log.error(e.getMessage());
                 }
                 
                 if (decodedJwt != null) {
                     //set the jwt to thread-bound request attribute
-                    requestAttributesUtil.set(RequestAttributesUtil.JWT, authorizationHeader);
+                    RequestAttributesUtil.setJwt(authorizationHeader);
                     
                     //roles as set of GrantedAuthority
                     Set<GrantedAuthority> authorities = jwtUtil.getRoles(decodedJwt).stream()
@@ -86,7 +83,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             
         } finally {
-            requestAttributesUtil.reset();           
+            RequestAttributesUtil.reset();           
         }
     }
 

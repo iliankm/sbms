@@ -25,12 +25,9 @@ import com.iliankm.sbms.web.filter.AuthenticationFilter;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
-    private final RequestAttributesUtil requestAttributesUtil;
-    
     private final AuthenticationFilter authenticationFilter;
     
-    public WebSecurityConfig(RequestAttributesUtil requestAttributesUtil, AuthenticationFilter authenticationFilter) {
-        this.requestAttributesUtil = requestAttributesUtil;
+    public WebSecurityConfig(AuthenticationFilter authenticationFilter) {
         this.authenticationFilter = authenticationFilter;
     }
     
@@ -48,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
                     ServletOutputStream stream = response.getOutputStream();
-                    stream.println(ObjectUtils.firstNonNull(requestAttributesUtil.get(RequestAttributesUtil.NO_AUTH_MESSAGE), "Unauthorized"));
+                    stream.println(ObjectUtils.firstNonNull(RequestAttributesUtil.getNoAuthMessage(), "Unauthorized"));
                     stream.close();                    
                 }})
             

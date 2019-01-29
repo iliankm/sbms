@@ -4,7 +4,6 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.iliankm.sbms.jwt.JwtUtil;
-import com.iliankm.sbms.utils.RequestAttributesUtil;
 import com.iliankm.sbms.web.filter.AuthenticationFilter;
 import com.iliankm.sbms.web.filter.CorrelationFilter;
 
@@ -13,11 +12,8 @@ public class FilterConfig {
     
     private final JwtUtil jwtUtil;
     
-    private final RequestAttributesUtil requestAttributesUtil;
-    
-    public FilterConfig(JwtUtil jwtUtil, RequestAttributesUtil requestAttributesUtil) {
+    public FilterConfig(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
-        this.requestAttributesUtil = requestAttributesUtil;
     }
 
     @Bean
@@ -33,12 +29,12 @@ public class FilterConfig {
     
     @Bean
     public AuthenticationFilter authenticationFilter() {
-        return new AuthenticationFilter(jwtUtil, requestAttributesUtil);
+        return new AuthenticationFilter(jwtUtil);
     }
     
     @Bean
     public CorrelationFilter correlationFilter() {
-        return new CorrelationFilter(requestAttributesUtil);
+        return new CorrelationFilter();
     }
     
 }

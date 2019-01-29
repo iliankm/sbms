@@ -24,17 +24,14 @@ public class KafkaSenderService {
     
     private final KafkaTemplate<String, Object> kafkaTemplate;
     
-    private final RequestAttributesUtil requestAttributesUtil;
-    
-    public KafkaSenderService(KafkaTemplate<String, Object> kafkaTemplate, RequestAttributesUtil requestAttributesUtil) {
+    public KafkaSenderService(KafkaTemplate<String, Object> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
-        this.requestAttributesUtil = requestAttributesUtil;
     }
     
     public void send(Topic topic, Object payload) {
         //prepare headers
         List<Header> headers = new LinkedList<>();
-        headers.add(new RecordHeader(KafkaHeaders.CORRELATION_ID, requestAttributesUtil.get(RequestAttributesUtil.CORRELATION_ID).toString().getBytes()));
+        headers.add(new RecordHeader(KafkaHeaders.CORRELATION_ID, RequestAttributesUtil.getCorrelationId().toString().getBytes()));
         headers.add(new RecordHeader(KafkaHeaders.TOPIC, topic.getTopicName().getBytes()));
 
         ProducerRecord<String, Object> producerRecord = new ProducerRecord<>(topic.getTopicName(), null, null, null, payload, headers);

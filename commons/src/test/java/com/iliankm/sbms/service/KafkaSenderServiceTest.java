@@ -44,9 +44,6 @@ public class KafkaSenderServiceTest {
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
     
-    @Autowired
-    private RequestAttributesUtil requestAttributesUtil;
-    
     @Profile({"test"})
     @Configuration
     @Import(ApplicationTestConfig.class)
@@ -58,12 +55,8 @@ public class KafkaSenderServiceTest {
             return Mockito.mock(KafkaTemplate.class);
         }
         @Bean
-        public RequestAttributesUtil requestAttributesUtil() {
-            return Mockito.mock(RequestAttributesUtil.class);
-        }
-        @Bean
         public KafkaSenderService kafkaSenderService() {
-            return new KafkaSenderService(kafkaTemplate(), requestAttributesUtil());
+            return new KafkaSenderService(kafkaTemplate());
         }
     }
     
@@ -73,7 +66,7 @@ public class KafkaSenderServiceTest {
         //given
         ListenableFuture<SendResult<String, Object>> future = Mockito.mock(ListenableFuture.class);
         when(kafkaTemplate.send(any(ProducerRecord.class))).thenReturn(future);
-        when(requestAttributesUtil.get(eq(RequestAttributesUtil.CORRELATION_ID))).thenReturn(CORRELATION_ID);
+        RequestAttributesUtil.setCorrelationId(CORRELATION_ID);
         //when
         kafkaSenderService.send(Topic.TEST, PAYLOAD);
         //then
