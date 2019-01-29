@@ -53,37 +53,40 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
             if (StringUtils.hasText(authorizationHeader)) {
                 //try decode the token
-                DecodedJWT decodedJwt;
+                DecodedJWT decodedJwt = null;
                 try {
                     decodedJwt = jwtUtil.decodeToken(authorizationHeader);    
                 } catch (TokenExpiredException te) {
                     requestAttributesUtil.set(RequestAttributesUtil.NO_AUTH_MESSAGE, MSG_TOKEN_EXPIRED);
                     log.warn(te.getMessage());
-                    return;
                 } catch (JWTVerificationException e) {
                     requestAttributesUtil.set(RequestAttributesUtil.NO_AUTH_MESSAGE, MSG_INVALID_TOKEN);
                     log.error(e.getMessage());
-                    return;
                 }
                 
-                //set the jwt to thread-bound request attribute
-                requestAttributesUtil.set(RequestAttributesUtil.JWT, authorizationHeader);
+                if (decodedJwt != null) {
+                    //set the jwt to thread-bound request attribute
+                    requestAttributesUtil.set(RequestAttributesUtil.JWT, authorizationHeader);
+                    
+                    //roles as set of GrantedAuthority
+                    Set<GrantedAuthority> authorities = jwtUtil.getRoles(decodedJwt).stream()
+                                    .map(s -> "ROLE_" + s)
+                                    .map(s -> new SimpleGrantedAuthority(s))
+                                    .collect(Collectors.toSet());
+                    //create Spring Security Authentication
+                    UsernamePasswordAuthenticationToken authentication =
+                                    new UsernamePasswordAuthenticationToken(decodedJwt.getSubject(), null, authorities);
+                    
+                    //set Spring Security Authentication to the security context
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
                 
-                //roles as set of GrantedAuthority
-                Set<GrantedAuthority> authorities = jwtUtil.getRoles(decodedJwt).stream()
-                                .map(s -> "ROLE_" + s)
-                                .map(s -> new SimpleGrantedAuthority(s))
-                                .collect(Collectors.toSet());
-                //create Spring Security Authentication
-                UsernamePasswordAuthenticationToken authentication =
-                                new UsernamePasswordAuthenticationToken(decodedJwt.getSubject(), null, authorities);
-                
-                //set Spring Security Authentication to the security context
-                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             
+            filterChain.doFilter(request, response);
+            
         } finally {
-            filterChain.doFilter(request, response);                
+            requestAttributesUtil.reset();           
         }
     }
 
