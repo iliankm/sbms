@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -22,11 +21,14 @@ import com.iliankm.sbms.utils.ApplicationProperties;
 @EnableKafka
 public class KafkaConsumerConfig {
 
-    @Autowired
-    private ApplicationProperties applicationProperties;
+    private final ApplicationProperties applicationProperties;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
+    
+    public KafkaConsumerConfig(ApplicationProperties applicationProperties, ObjectMapper objectMapper) {
+        this.applicationProperties = applicationProperties;
+        this.objectMapper = objectMapper;
+    }
 
     @Primary
     @Bean

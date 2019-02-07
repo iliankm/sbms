@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -12,16 +11,20 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iliankm.sbms.service.KafkaSenderService;
 import com.iliankm.sbms.utils.ApplicationProperties;
 
 @Configuration
 public class KafkaProducerConfig {
 
-    @Autowired
-    private ApplicationProperties applicationProperties;
+    private final ApplicationProperties applicationProperties;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
+    
+    public KafkaProducerConfig(ApplicationProperties applicationProperties, ObjectMapper objectMapper) {
+        this.applicationProperties = applicationProperties;
+        this.objectMapper = objectMapper;
+    }
 
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
@@ -47,5 +50,10 @@ public class KafkaProducerConfig {
     public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
-
+    
+    @Bean
+    public KafkaSenderService kafkaSenderService() {
+        return new KafkaSenderService(kafkaTemplate());
+    }
+    
 }

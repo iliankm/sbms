@@ -18,7 +18,7 @@ public enum Topic {
     }
     
     public static interface Names {
-        String TOPIC_TEST = "test";
+        String TOPIC_TEST = "ikm.test";
     }
     
 }
