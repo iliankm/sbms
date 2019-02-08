@@ -7,6 +7,8 @@ import static org.mockito.Mockito.verify;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -78,23 +80,28 @@ public class TestConsumerTest {
     @Before
     public void setup() throws InterruptedException {
         //give time EMBEDDED_KAFKA to start
-        Thread.sleep(500);
+        Thread.sleep(1000);
     }
     
     @Test
     public void send_to_Test_Topic() throws Exception {
         //given
+        CountDownLatch consumerLatch = new CountDownLatch(1);
         RequestAttributesUtil.setCorrelationId(CORRELATION_ID);
         final StringBuilder correlationIdInConsumer = new StringBuilder();
         doAnswer(i -> {
             correlationIdInConsumer.append(RequestAttributesUtil.getCorrelationId());
+            consumerLatch.countDown();
             return null;
         }).when(testTopicService).process(any());
         //when
         kafkaSenderService.send(Topic.TEST, MESSAGE);
         //then
-        Thread.sleep(2500);
+        //wait the latch for 5 seconds
+        consumerLatch.await(5, TimeUnit.SECONDS);
+        //verify that the BE service is called and with correct args
         verify(testTopicService, times(1)).process(eq(MESSAGE));
+        //assert correlation id is passed in the consumer's context
         assertEquals(CORRELATION_ID, correlationIdInConsumer.toString());
     }
 }
