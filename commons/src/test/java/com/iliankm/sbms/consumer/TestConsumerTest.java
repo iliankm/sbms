@@ -58,7 +58,7 @@ public class TestConsumerTest {
     
     @Profile({"test"})
     @Configuration
-    @EnableAspectJAutoProxy
+    @EnableAspectJAutoProxy(proxyTargetClass = true)
     @Import({ApplicationTestConfig.class, JacksonConfig.class, KafkaConsumerConfig.class, KafkaProducerConfig.class})
     public static class TestConfiguration {
         @Bean

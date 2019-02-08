@@ -9,8 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.messaging.handler.annotation.Headers;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import com.iliankm.sbms.utils.RequestAttributesUtil;
 
@@ -23,7 +21,7 @@ public class ConsumerAspect {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Before("execution(* com.iliankm.sbms.consumer.Consumer.listen (Object, java.util.Map<String, Object>)) && args(message, headers, ..)")
-    public void beforeListen(@Payload Object message, @Headers Map<String, Object> headers) {
+    public void beforeListen(Object message, Map<String, Object> headers) {
         
         RequestAttributesUtil.reset();
         
@@ -38,7 +36,7 @@ public class ConsumerAspect {
     }
     
     @After("execution(* com.iliankm.sbms.consumer.Consumer.listen (Object, java.util.Map<String, Object>)) && args(message, headers, ..)")
-    public void afterListen(@Payload Object message, @Headers Map<String, Object> headers) {
+    public void afterListen(Object message, Map<String, Object> headers) {
         
         String topicName = headerValue(headers.get(KafkaHeaders.TOPIC));
         
@@ -48,7 +46,7 @@ public class ConsumerAspect {
     }
     
     @AfterThrowing("execution(* com.iliankm.sbms.consumer.Consumer.listen (Object, java.util.Map<String, Object>)) && args(message, headers, ..)")
-    public void afterThrowing(@Payload Object message, @Headers Map<String, Object> headers) {
+    public void afterThrowing(Object message, Map<String, Object> headers) {
         
         String topicName = headerValue(headers.get(KafkaHeaders.TOPIC));
         
