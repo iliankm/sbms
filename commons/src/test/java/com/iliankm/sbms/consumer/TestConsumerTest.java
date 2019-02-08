@@ -1,7 +1,8 @@
 package com.iliankm.sbms.consumer;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,11 +16,13 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.test.rule.KafkaEmbedded;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import com.iliankm.sbms.aspect.ConsumerAspect;
 import com.iliankm.sbms.config.ApplicationTestConfig;
 import com.iliankm.sbms.config.JacksonConfig;
 import com.iliankm.sbms.config.KafkaConsumerConfig;
@@ -55,6 +58,7 @@ public class TestConsumerTest {
     
     @Profile({"test"})
     @Configuration
+    @EnableAspectJAutoProxy
     @Import({ApplicationTestConfig.class, JacksonConfig.class, KafkaConsumerConfig.class, KafkaProducerConfig.class})
     public static class TestConfiguration {
         @Bean
@@ -62,8 +66,12 @@ public class TestConsumerTest {
             return Mockito.mock(TestTopicService.class);
         } 
         @Bean
-        public TestConsumer testConsumer(TestTopicService testTopicService) {
-            return new TestConsumer(testTopicService);
+        public TestConsumer testConsumer() {
+            return new TestConsumer(testTopicService());
+        }
+        @Bean
+        public ConsumerAspect consumerAspect() {
+            return new ConsumerAspect();
         }
     }
     
@@ -77,10 +85,16 @@ public class TestConsumerTest {
     public void send_to_Test_Topic() throws Exception {
         //given
         RequestAttributesUtil.setCorrelationId(CORRELATION_ID);
+        final StringBuilder correlationIdInConsumer = new StringBuilder();
+        doAnswer(i -> {
+            correlationIdInConsumer.append(RequestAttributesUtil.getCorrelationId());
+            return null;
+        }).when(testTopicService).process(any());
         //when
         kafkaSenderService.send(Topic.TEST, MESSAGE);
         //then
-        Thread.sleep(500);
+        Thread.sleep(2500);
         verify(testTopicService, times(1)).process(eq(MESSAGE));
+        assertEquals(CORRELATION_ID, correlationIdInConsumer.toString());
     }
 }

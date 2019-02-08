@@ -8,14 +8,14 @@ import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.stereotype.Component;
 import com.iliankm.sbms.utils.RequestAttributesUtil;
 
 @Aspect
-@Configuration
+@Component
 public class ConsumerAspect {
     
     private static final String LOG_KEY_CORRELATION_ID = "correlation.id";

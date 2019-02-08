@@ -2,6 +2,8 @@ package com.iliankm.sbms.consumer;
 
 import java.util.Map;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Headers;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import com.iliankm.sbms.enums.Topic;
 import com.iliankm.sbms.service.TestTopicService;
@@ -15,9 +17,9 @@ public class TestConsumer implements Consumer<Map<String, String>> {
         this.testTopicService = testTopicService;
     }
 
-    @KafkaListener(topics = Topic.Names.TOPIC_TEST)
     @Override
-    public void listen(Map<String, String> message, Map<String, Object> headers) {
+    @KafkaListener(topics = Topic.Names.TOPIC_TEST)
+    public void listen(@Payload Map<String, String> message, @Headers Map<String, Object> headers) {
         testTopicService.process(message);
     }
 
