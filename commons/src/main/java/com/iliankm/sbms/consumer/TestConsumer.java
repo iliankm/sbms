@@ -7,7 +7,7 @@ import com.iliankm.sbms.enums.Topic;
 import com.iliankm.sbms.service.TestTopicService;
 
 @Component
-public class TestConsumer implements Consumer<String> {
+public class TestConsumer implements Consumer<Map<String, String>> {
     
     private final TestTopicService testTopicService;
     
@@ -17,8 +17,8 @@ public class TestConsumer implements Consumer<String> {
 
     @KafkaListener(topics = Topic.Names.TOPIC_TEST)
     @Override
-    public void listen(String message, Map<String, Object> headers) {
-        testTopicService.process(message, headers);
+    public void listen(Map<String, String> message, Map<String, Object> headers) {
+        testTopicService.process(message);
     }
 
 }

@@ -1,13 +1,18 @@
 package com.iliankm.sbms.consumer;
 
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -29,13 +34,16 @@ import com.iliankm.sbms.utils.RequestAttributesUtil;
 public class TestConsumerTest {
     
     private static final String CORRELATION_ID = UUID.randomUUID().toString();
-    private static final String MESSAGE = UUID.randomUUID().toString();
+    private static final Map<String, String> MESSAGE = new HashMap<>();
+    static {
+        MESSAGE.put(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+    }
     
     @ClassRule
     public static KafkaEmbedded EMBEDDED_KAFKA = new KafkaEmbedded(1);
     
     @BeforeClass
-    public static void setup() {
+    public static void setupClass() {
         System.setProperty("kafka.bootstrap.servers", EMBEDDED_KAFKA.getBrokersAsString());
     }
     
@@ -44,8 +52,6 @@ public class TestConsumerTest {
     
     @Autowired
     private TestTopicService testTopicService;
-    @Autowired
-    private TestConsumer testConsumer;
     
     @Profile({"test"})
     @Configuration
@@ -56,19 +62,25 @@ public class TestConsumerTest {
             return Mockito.mock(TestTopicService.class);
         } 
         @Bean
-        public TestConsumer testConsumer() {
-            return new TestConsumer(testTopicService());
+        public TestConsumer testConsumer(TestTopicService testTopicService) {
+            return new TestConsumer(testTopicService);
         }
     }
     
+    @Before
+    public void setup() throws InterruptedException {
+        //give time EMBEDDED_KAFKA to start
+        Thread.sleep(500);
+    }
+    
     @Test
-    public void send_to_Test_Topic() {
+    public void send_to_Test_Topic() throws Exception {
         //given
         RequestAttributesUtil.setCorrelationId(CORRELATION_ID);
         //when
         kafkaSenderService.send(Topic.TEST, MESSAGE);
         //then
-        
+        Thread.sleep(500);
+        verify(testTopicService, times(1)).process(eq(MESSAGE));
     }
-
 }
