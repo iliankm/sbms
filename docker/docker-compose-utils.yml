@@ -16,3 +16,7 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE    
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     mem_limit: 512m
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
