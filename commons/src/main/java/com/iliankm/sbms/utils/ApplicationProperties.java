@@ -1,5 +1,6 @@
 package com.iliankm.sbms.utils;
 
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +13,22 @@ public class ApplicationProperties {
     private int jwtAccessTokenExpirationTime;
     @Value("${jwt.refresh.token.expiration.time:20}")
     private int jwtRefreshTokenExpirationTime;
+    
     @Value("${kafka.bootstrap.servers}")
     private String kafkaBootstrapServers;
     @Value("${kafka.group.id}")
     private String kafkaGroupId;
+    
+    @Value("${redis.enabled:false}")
+    private boolean redisEnabled;
+    @Value("#{'${redis.hosts:}'.split(',')}")
+    private Set<String> redisHosts;
+    @Value("#{'${redis.ports:}'.split(',')}")
+    private Set<String> redisPorts;
+    @Value("${redis.password}")
+    private String redisPassword;
+    @Value("${redis.cache.ttl:0}")
+    private int redisCacheTtl;
     
     public String jwtSecret() {
         return jwtSecret;
@@ -36,4 +49,25 @@ public class ApplicationProperties {
     public String kafkaGroupId() {
         return kafkaGroupId;
     }
+    
+    public boolean redisEnabled() {
+        return redisEnabled;
+    }
+
+    public Set<String> redisHosts() {
+        return redisHosts;
+    }
+
+    public Set<String> redisPorts() {
+        return redisPorts;
+    }
+
+    public String redisPassword() {
+        return redisPassword;
+    }
+
+    public int redisCacheTtl() {
+        return redisCacheTtl;
+    }
+    
 }
