@@ -23,9 +23,7 @@ public class ApplicationProperties {
     private boolean redisEnabled;
     @Value("#{'${redis.hosts:}'.split(',')}")
     private Set<String> redisHosts;
-    @Value("#{'${redis.ports:}'.split(',')}")
-    private Set<String> redisPorts;
-    @Value("${redis.password}")
+     @Value("${redis.password}")
     private String redisPassword;
     @Value("${redis.cache.ttl:0}")
     private int redisCacheTtl;
@@ -56,10 +54,6 @@ public class ApplicationProperties {
 
     public Set<String> redisHosts() {
         return redisHosts;
-    }
-
-    public Set<String> redisPorts() {
-        return redisPorts;
     }
 
     public String redisPassword() {
