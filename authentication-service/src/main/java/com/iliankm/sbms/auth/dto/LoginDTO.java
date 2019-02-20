@@ -7,10 +7,10 @@ public class LoginDTO implements Serializable {
     
     private static final long serialVersionUID = -342721006264186532L;
 
-    @NotEmpty
+    @NotEmpty(message = "Username not provided.")
     private String username;
     
-    @NotEmpty
+    @NotEmpty(message = "Password not provided.")
     private String password;
     
     @SuppressWarnings("unused")
