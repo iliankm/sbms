@@ -12,6 +12,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisClusterNode;
 import org.springframework.data.redis.connection.RedisPassword;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -38,28 +39,49 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Bean
     @ConditionalOnProperty("redis.enabled")
     public LettuceConnectionFactory redisConnectionFactory() {
-
-        RedisClusterConfiguration redisConfig = new RedisClusterConfiguration();
-
-        applicationProperties.redisHosts().forEach(r -> {
-            String[] parts = r.split(":");
-            redisConfig.addClusterNode(new RedisClusterNode(parts[0], Integer.valueOf(parts[1])));
-        });
-
-        if (StringUtils.hasText(applicationProperties.redisPassword())) {
-            redisConfig.setPassword(RedisPassword.of(applicationProperties.redisPassword()));
-        }
-
+        
         ClusterClientOptions clusterClientOptions =
                         ClusterClientOptions.builder().validateClusterNodeMembership(false).build();
-
+        
         LettuceClientConfiguration lettuceClientConfiguration =
                         LettuceClientConfiguration.builder().clientOptions(clusterClientOptions)
                                         // .commandTimeout(Duration.ofMillis(commandTimeout))
                                         // .useSsl()
                                         .build();
+        
+        //redis standalone config.
+        if (applicationProperties.redisHosts().size() == 1) {
+            
+            String[] host = applicationProperties.redisHosts().iterator().next().split(":");
+            
+            RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(host[0], Integer.valueOf(host[1]));
+            
+            if (StringUtils.hasText(applicationProperties.redisPassword())) {
+                redisConfig.setPassword(RedisPassword.of(applicationProperties.redisPassword()));
+            }
+            
+            return new LettuceConnectionFactory(redisConfig, lettuceClientConfiguration);
+            
+        } else {
+            //redis cluster config.
+            if (applicationProperties.redisHosts().size() > 1) {
+                
+                RedisClusterConfiguration redisConfig = new RedisClusterConfiguration();
 
-        return new LettuceConnectionFactory(redisConfig, lettuceClientConfiguration);
+                applicationProperties.redisHosts().forEach(r -> {
+                    String[] parts = r.split(":");
+                    redisConfig.addClusterNode(new RedisClusterNode(parts[0], Integer.valueOf(parts[1])));
+                });
+
+                if (StringUtils.hasText(applicationProperties.redisPassword())) {
+                    redisConfig.setPassword(RedisPassword.of(applicationProperties.redisPassword()));
+                }
+                
+                return new LettuceConnectionFactory(redisConfig, lettuceClientConfiguration);
+            }
+        }
+        
+        return null;
     }
 
     @Bean
