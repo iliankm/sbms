@@ -20,7 +20,6 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.util.StringUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iliankm.sbms.utils.ApplicationProperties;
 import io.lettuce.core.cluster.ClusterClientOptions;
 
@@ -29,11 +28,9 @@ import io.lettuce.core.cluster.ClusterClientOptions;
 public class RedisConfig extends CachingConfigurerSupport {
 
     private final ApplicationProperties applicationProperties;
-    private final ObjectMapper objectMapper;
 
-    public RedisConfig(ApplicationProperties applicationProperties, ObjectMapper objectMapper) {
+    public RedisConfig(ApplicationProperties applicationProperties) {
         this.applicationProperties = applicationProperties;
-        this.objectMapper = objectMapper;
     }
 
     @Bean
@@ -91,7 +88,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory());
         template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         
         return template;
     }
@@ -105,7 +102,7 @@ public class RedisConfig extends CachingConfigurerSupport {
                         .disableCachingNullValues()
                         // .computePrefixWith((cacheName) -> keyPrefix + ":" + cacheName + ":")
                         .serializeValuesWith(RedisSerializationContext.SerializationPair
-                                        .fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper)));
+                                        .fromSerializer(new GenericJackson2JsonRedisSerializer()));
         return RedisCacheManager.builder(redisConnectionFactory()).cacheDefaults(cacheConfiguration).build();
     }
 
