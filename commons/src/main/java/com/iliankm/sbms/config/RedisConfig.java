@@ -23,6 +23,7 @@ import org.springframework.util.StringUtils;
 import com.iliankm.sbms.utils.ApplicationProperties;
 import io.lettuce.core.cluster.ClusterClientOptions;
 
+@ConditionalOnProperty(name = "redis.enabled", havingValue = "true")
 @EnableCaching
 @Configuration
 public class RedisConfig extends CachingConfigurerSupport {
@@ -34,7 +35,6 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     @Bean
-    @ConditionalOnProperty("redis.enabled")
     public LettuceConnectionFactory redisConnectionFactory() {
         
         ClusterClientOptions clusterClientOptions =
@@ -82,7 +82,6 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     @Bean
-    @ConditionalOnProperty("redis.enabled")
     public RedisTemplate<String, Object> template() {
 
         RedisTemplate<String, Object> template = new RedisTemplate<>();
@@ -94,7 +93,6 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     @Bean
-    @ConditionalOnProperty("redis.enabled")
     public CacheManager cacheManager() {
 
         RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()

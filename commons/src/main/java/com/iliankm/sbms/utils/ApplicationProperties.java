@@ -7,23 +7,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationProperties {
     
-    @Value("${jwt.secret}")
+    @Value("${jwt.secret:}")
     private String jwtSecret;
     @Value("${jwt.access.token.expiration.time:15}")
     private int jwtAccessTokenExpirationTime;
     @Value("${jwt.refresh.token.expiration.time:20}")
     private int jwtRefreshTokenExpirationTime;
     
-    @Value("${kafka.bootstrap.servers}")
+    @Value("${kafka.bootstrap.servers:}")
     private String kafkaBootstrapServers;
-    @Value("${kafka.group.id}")
+    @Value("${kafka.group.id:}")
     private String kafkaGroupId;
     
     @Value("${redis.enabled:false}")
     private boolean redisEnabled;
     @Value("#{'${redis.hosts:}'.split(',')}")
     private Set<String> redisHosts;
-     @Value("${redis.password}")
+     @Value("${redis.password:}")
     private String redisPassword;
     @Value("${redis.cache.ttl:0}")
     private int redisCacheTtl;

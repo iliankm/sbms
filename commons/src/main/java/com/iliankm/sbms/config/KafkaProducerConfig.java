@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iliankm.sbms.service.KafkaSenderService;
 import com.iliankm.sbms.utils.ApplicationProperties;
 
+@ConditionalOnProperty(name = "kafka.enabled", havingValue = "true")
 @Configuration
 public class KafkaProducerConfig {
 
