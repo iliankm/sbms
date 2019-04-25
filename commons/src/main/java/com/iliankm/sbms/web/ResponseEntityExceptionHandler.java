@@ -1,8 +1,10 @@
 package com.iliankm.sbms.web;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
@@ -27,28 +29,28 @@ public class ResponseEntityExceptionHandler extends
     private static final String MSG_FORMAT = "\r\n{} ({} {})";
 
     @ExceptionHandler({RuntimeException.class})
-    public ResponseEntity<Object> handleRuntimeException(Exception ex, HttpServletRequest request) {
+    public void handleRuntimeException(Exception ex, HttpServletRequest request, HttpServletResponse response) throws IOException {
         log.error(MessageFormatter.arrayFormat(MSG_FORMAT, new Object[] {ex.getMessage(),
                         request.getMethod(), request.getRequestURI()}).getMessage(), ex);
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
     }
 
     @ExceptionHandler({NotFoundException.class})
-    public ResponseEntity<Object> handleNotFoundException(Exception ex, HttpServletRequest request) {
+    public void handleNotFoundException(Exception ex, HttpServletRequest request, HttpServletResponse response) throws IOException {
         log.info(MSG_FORMAT, ex.getMessage(), request.getMethod(), request.getRequestURI());
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        response.sendError(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase());
     }
     
     @ExceptionHandler({UnauthorizedException.class})
-    public ResponseEntity<Object> handleUnauthorizedException(Exception ex, HttpServletRequest request) {
+    public void handleUnauthorizedException(Exception ex, HttpServletRequest request, HttpServletResponse response) throws IOException {
         log.info(MSG_FORMAT, ex.getMessage(), request.getMethod(), request.getRequestURI());
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+        response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
     }
     
     @ExceptionHandler({AccessDeniedException.class})
-    public ResponseEntity<Object> handleAccessDeniedException(Exception ex, HttpServletRequest request) {
+    public void handleAccessDeniedException(Exception ex, HttpServletRequest request, HttpServletResponse response) throws IOException {
         log.info(MSG_FORMAT, ex.getMessage(), request.getMethod(), request.getRequestURI());
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+        response.sendError(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.getReasonPhrase());
     }
     
     /**

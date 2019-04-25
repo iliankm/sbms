@@ -54,11 +54,13 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 try {
                     decodedJwt = jwtUtil.decodeToken(authorizationHeader);    
                 } catch (TokenExpiredException te) {
-                    RequestAttributesUtil.setNoAuthMessage(MSG_TOKEN_EXPIRED);
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, MSG_TOKEN_EXPIRED);
                     log.warn(te.getMessage());
+                    return;
                 } catch (JWTVerificationException e) {
-                    RequestAttributesUtil.setNoAuthMessage(MSG_INVALID_TOKEN);
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, MSG_INVALID_TOKEN);
                     log.error(e.getMessage());
+                    return;
                 }
                 
                 if (decodedJwt != null) {
