@@ -1,0 +1,2 @@
+auth-service: 
+  url: http://localhost:8082

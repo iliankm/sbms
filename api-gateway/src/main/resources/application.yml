@@ -1,0 +1,16 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: api-gateway
+  profiles:
+    active: local
+  cloud:
+    gateway:
+      routes:
+      - id: auth_service
+        uri: ${auth-service.url}
+        predicates:
+        - Path=/auth-service/**
+        filters:
+        - StripPrefix=1
