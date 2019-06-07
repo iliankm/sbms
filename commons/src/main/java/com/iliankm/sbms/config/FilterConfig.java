@@ -3,16 +3,16 @@ package com.iliankm.sbms.config;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.iliankm.sbms.jwt.JwtUtil;
+import com.iliankm.sbms.jwt.JwtUtils;
 import com.iliankm.sbms.web.filter.AuthenticationFilter;
 import com.iliankm.sbms.web.filter.CorrelationFilter;
 
 @Configuration
 public class FilterConfig {
     
-    private final JwtUtil jwtUtil;
+    private final JwtUtils jwtUtil;
     
-    public FilterConfig(JwtUtil jwtUtil) {
+    public FilterConfig(JwtUtils jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 

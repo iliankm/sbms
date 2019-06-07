@@ -21,17 +21,17 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.iliankm.sbms.config.ApplicationTestConfig;
-import com.iliankm.sbms.utils.ApplicationProperties;
+import com.iliankm.sbms.utils.AppProperties;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles({"test"})
-public class JwtUtilTest {
+public class JwtUtilsTest {
     
     private static final String SUBJECT = "SUBJECT";
     private static final String ROLE = "ROLE";
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtUtils jwtUtils;
 
     @Profile({"test"})
     @Configuration
@@ -41,7 +41,7 @@ public class JwtUtilTest {
     @Test
     public void createAccessToken_Test() {
         //when
-        String jwt = jwtUtil.createAccessToken(SUBJECT, new HashSet<>(Arrays.asList(ROLE)));
+        String jwt = jwtUtils.createAccessToken(SUBJECT, new HashSet<>(Arrays.asList(ROLE)));
         //then
         assertTrue(StringUtils.hasText(jwt));
     }
@@ -49,23 +49,23 @@ public class JwtUtilTest {
     @Test
     public void createRefreshToken_Test() {
         //when
-        String jwt = jwtUtil.createRefreshToken(SUBJECT);
+        String jwt = jwtUtils.createRefreshToken(SUBJECT);
         //then
         assertTrue(StringUtils.hasText(jwt));
     }
     
     @Test(expected = JWTDecodeException.class)
     public void decodeInvalidToken_Test() {
-        jwtUtil.decodeToken("");
+        jwtUtils.decodeToken("");
     }
     
     @Test(expected = TokenExpiredException.class)
     public void decodeExpiredToken_Test() throws InterruptedException {
         //given
-        ApplicationProperties applicationProperties = Mockito.mock(ApplicationProperties.class);
+        AppProperties applicationProperties = Mockito.mock(AppProperties.class);
         when(applicationProperties.jwtAccessTokenExpirationTime()).thenReturn(-1);
         when(applicationProperties.jwtSecret()).thenReturn("SECRET");
-        JwtUtil jwtUtil = new JwtUtil(applicationProperties);
+        JwtUtils jwtUtil = new JwtUtils(applicationProperties);
         String jwt = jwtUtil.createAccessToken(SUBJECT, new HashSet<>(Arrays.asList(ROLE)));
         //when
         jwtUtil.decodeToken(jwt);
@@ -74,25 +74,25 @@ public class JwtUtilTest {
     @Test
     public void decodeValidToken_Test() {
         //given
-        String jwt = jwtUtil.createAccessToken(SUBJECT, new HashSet<>(Arrays.asList(ROLE)));
+        String jwt = jwtUtils.createAccessToken(SUBJECT, new HashSet<>(Arrays.asList(ROLE)));
         //when
-        DecodedJWT decodedJwt = jwtUtil.decodeToken(jwt);
+        DecodedJWT decodedJwt = jwtUtils.decodeToken(jwt);
         //then
         assertEquals(SUBJECT, decodedJwt.getSubject());
-        assertEquals(new HashSet<>(Arrays.asList(ROLE)), jwtUtil.getRoles(decodedJwt));
-        assertFalse(jwtUtil.isRefreshToken(decodedJwt));
+        assertEquals(new HashSet<>(Arrays.asList(ROLE)), jwtUtils.getRoles(decodedJwt));
+        assertFalse(jwtUtils.isRefreshToken(decodedJwt));
     }
     
     @Test
     public void decodeValidRefreshToken_Test() {
         //given
-        String jwt = jwtUtil.createRefreshToken(SUBJECT);
+        String jwt = jwtUtils.createRefreshToken(SUBJECT);
         //when
-        DecodedJWT decodedJwt = jwtUtil.decodeToken(jwt);
+        DecodedJWT decodedJwt = jwtUtils.decodeToken(jwt);
         //then
         assertEquals(SUBJECT, decodedJwt.getSubject());
-        assertEquals(Collections.emptySet(), jwtUtil.getRoles(decodedJwt));
-        assertTrue(jwtUtil.isRefreshToken(decodedJwt));
+        assertEquals(Collections.emptySet(), jwtUtils.getRoles(decodedJwt));
+        assertTrue(jwtUtils.isRefreshToken(decodedJwt));
     }
 
 }

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ApplicationProperties {
+public class AppProperties {
     
     @Value("${jwt.secret:}")
     private String jwtSecret;

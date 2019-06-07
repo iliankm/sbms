@@ -14,7 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.iliankm.sbms.web.ResponseEntityExceptionHandler;
+import com.iliankm.sbms.web.ResponseExceptionHandler;
 import com.iliankm.sbms.web.filter.AuthenticationFilter;
 
 @Configuration
@@ -58,8 +58,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     
     @Bean
-    public ResponseEntityExceptionHandler responseEntityExceptionHandler() {
-        return new ResponseEntityExceptionHandler();
+    public ResponseExceptionHandler responseEntityExceptionHandler() {
+        return new ResponseExceptionHandler();
     }
     
 }

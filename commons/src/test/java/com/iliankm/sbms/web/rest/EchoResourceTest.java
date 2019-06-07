@@ -25,8 +25,8 @@ import com.iliankm.sbms.config.ApplicationTestConfig;
 import com.iliankm.sbms.config.FilterConfig;
 import com.iliankm.sbms.config.WebSecurityConfig;
 import com.iliankm.sbms.enums.Role;
-import com.iliankm.sbms.jwt.JwtUtil;
-import com.iliankm.sbms.utils.ApplicationProperties;
+import com.iliankm.sbms.jwt.JwtUtils;
+import com.iliankm.sbms.utils.AppProperties;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = EchoResource.class, secure = true)
@@ -51,7 +51,7 @@ public class EchoResourceTest {
     private MockMvc mvc;
     
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtUtils jwtUtil;
     
     @Test
     public void try_No_Auth_Without_Query_Param() throws Exception {
@@ -81,10 +81,10 @@ public class EchoResourceTest {
     @Test
     public void try_With_Expired_JWT() throws Exception {
         //given
-        ApplicationProperties applicationProperties = Mockito.mock(ApplicationProperties.class);
+        AppProperties applicationProperties = Mockito.mock(AppProperties.class);
         when(applicationProperties.jwtAccessTokenExpirationTime()).thenReturn(-1);
         when(applicationProperties.jwtSecret()).thenReturn("TEST_JWT_SECRET");
-        JwtUtil jwtUtil = new JwtUtil(applicationProperties);
+        JwtUtils jwtUtil = new JwtUtils(applicationProperties);
         String jwt = jwtUtil.createAccessToken("USER", new HashSet<>(Arrays.asList(Role.TEST.name())));
         //when
         ResultActions result = mvc.perform(get(URL).header(HttpHeaders.AUTHORIZATION, jwt)

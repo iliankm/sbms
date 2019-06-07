@@ -20,7 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.iliankm.sbms.jwt.JwtUtil;
+import com.iliankm.sbms.jwt.JwtUtils;
 import com.iliankm.sbms.utils.RequestAttributesUtil;
 
 public class AuthenticationFilter extends OncePerRequestFilter {
@@ -33,9 +33,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     
     private static final String MSG_TOKEN_EXPIRED = "Token expired.";
 
-    private final JwtUtil jwtUtil;
+    private final JwtUtils jwtUtil;
     
-    public AuthenticationFilter(JwtUtil jwtUtil) {
+    public AuthenticationFilter(JwtUtils jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 

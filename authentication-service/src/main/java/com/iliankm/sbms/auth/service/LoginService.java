@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 import com.iliankm.sbms.auth.dto.JwtDTO;
 import com.iliankm.sbms.auth.dto.LoginDTO;
 import com.iliankm.sbms.exception.UnauthorizedException;
-import com.iliankm.sbms.jwt.JwtUtil;
+import com.iliankm.sbms.jwt.JwtUtils;
 
 @Service
 @PropertySource(value = "classpath:users.properties")
@@ -22,13 +22,13 @@ public class LoginService {
 
     private static final String MSG_INVALID_USERNAME_PASSWORD = "Invalid username or password.";
 
-    private final JwtUtil jwtUtil;
+    private final JwtUtils jwtUtil;
 
     private final Map<String, String> users = new HashMap<>();
 
     private final Map<String, String> roles = new HashMap<>();
 
-    public LoginService(JwtUtil jwtUtil) {
+    public LoginService(JwtUtils jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 

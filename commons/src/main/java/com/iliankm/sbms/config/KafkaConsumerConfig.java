@@ -16,18 +16,18 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iliankm.sbms.utils.ApplicationProperties;
+import com.iliankm.sbms.utils.AppProperties;
 
 @ConditionalOnProperty(name = "kafka.enabled", havingValue = "true")
 @Configuration
 @EnableKafka
 public class KafkaConsumerConfig {
 
-    private final ApplicationProperties applicationProperties;
+    private final AppProperties applicationProperties;
 
     private final ObjectMapper objectMapper;
     
-    public KafkaConsumerConfig(ApplicationProperties applicationProperties, ObjectMapper objectMapper) {
+    public KafkaConsumerConfig(AppProperties applicationProperties, ObjectMapper objectMapper) {
         this.applicationProperties = applicationProperties;
         this.objectMapper = objectMapper;
     }

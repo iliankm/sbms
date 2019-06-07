@@ -21,7 +21,7 @@ import com.iliankm.sbms.exception.NotFoundException;
 import com.iliankm.sbms.exception.UnauthorizedException;
 
 @ControllerAdvice
-public class ResponseEntityExceptionHandler extends
+public class ResponseExceptionHandler extends
                 org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());

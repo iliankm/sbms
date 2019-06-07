@@ -20,7 +20,7 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.util.StringUtils;
-import com.iliankm.sbms.utils.ApplicationProperties;
+import com.iliankm.sbms.utils.AppProperties;
 import io.lettuce.core.cluster.ClusterClientOptions;
 
 @ConditionalOnProperty(name = "redis.enabled", havingValue = "true")
@@ -28,9 +28,9 @@ import io.lettuce.core.cluster.ClusterClientOptions;
 @Configuration
 public class RedisConfig extends CachingConfigurerSupport {
 
-    private final ApplicationProperties applicationProperties;
+    private final AppProperties applicationProperties;
 
-    public RedisConfig(ApplicationProperties applicationProperties) {
+    public RedisConfig(AppProperties applicationProperties) {
         this.applicationProperties = applicationProperties;
     }
 

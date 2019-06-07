@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
-import com.iliankm.sbms.jwt.JwtUtil;
-import com.iliankm.sbms.utils.ApplicationProperties;
+import com.iliankm.sbms.jwt.JwtUtils;
+import com.iliankm.sbms.utils.AppProperties;
 
 @Profile({"test"})
 @Configuration
@@ -19,13 +19,13 @@ import com.iliankm.sbms.utils.ApplicationProperties;
 public class ApplicationTestConfig {
     
     @Bean
-    public ApplicationProperties applicationProperties() {
-        return new ApplicationProperties();
+    public AppProperties applicationProperties() {
+        return new AppProperties();
     }
     
     @Bean
-    public JwtUtil jwtUtil() {
-        return new JwtUtil(applicationProperties());
+    public JwtUtils jwtUtil() {
+        return new JwtUtils(applicationProperties());
     }
 
 }

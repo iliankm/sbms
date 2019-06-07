@@ -32,14 +32,14 @@ import com.iliankm.sbms.utils.RequestAttributesUtil;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles({"test"})
-public class KafkaSenderServiceTest {
+public class SenderServiceTest {
     
     private static final String PAYLOAD = UUID.randomUUID().toString();
     
     private static final String CORRELATION_ID = UUID.randomUUID().toString(); 
     
     @Autowired
-    private KafkaSenderService kafkaSenderService;
+    private SenderService senderService;
     
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
@@ -55,8 +55,8 @@ public class KafkaSenderServiceTest {
             return Mockito.mock(KafkaTemplate.class);
         }
         @Bean
-        public KafkaSenderService kafkaSenderService() {
-            return new KafkaSenderService(kafkaTemplate());
+        public SenderService kafkaSenderService() {
+            return new SenderService(kafkaTemplate());
         }
     }
     
@@ -68,7 +68,7 @@ public class KafkaSenderServiceTest {
         when(kafkaTemplate.send(any(ProducerRecord.class))).thenReturn(future);
         RequestAttributesUtil.setCorrelationId(CORRELATION_ID);
         //when
-        kafkaSenderService.send(Topic.TEST, PAYLOAD);
+        senderService.send(Topic.TEST, PAYLOAD);
         //then
         //verify kafkaTemplate.send was called with correct argument
         List<Header> headers = new LinkedList<>();

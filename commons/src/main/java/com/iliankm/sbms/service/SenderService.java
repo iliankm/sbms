@@ -18,13 +18,13 @@ import com.iliankm.sbms.enums.Topic;
 import com.iliankm.sbms.utils.RequestAttributesUtil;
 
 @Service
-public class KafkaSenderService {
+public class SenderService {
     
-    private static final Logger log = LoggerFactory.getLogger(KafkaSenderService.class);
+    private static final Logger log = LoggerFactory.getLogger(SenderService.class);
     
     private final KafkaTemplate<String, Object> kafkaTemplate;
     
-    public KafkaSenderService(KafkaTemplate<String, Object> kafkaTemplate) {
+    public SenderService(KafkaTemplate<String, Object> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
     

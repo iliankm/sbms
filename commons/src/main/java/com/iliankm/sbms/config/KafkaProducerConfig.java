@@ -12,18 +12,18 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iliankm.sbms.service.KafkaSenderService;
-import com.iliankm.sbms.utils.ApplicationProperties;
+import com.iliankm.sbms.service.SenderService;
+import com.iliankm.sbms.utils.AppProperties;
 
 @ConditionalOnProperty(name = "kafka.enabled", havingValue = "true")
 @Configuration
 public class KafkaProducerConfig {
 
-    private final ApplicationProperties applicationProperties;
+    private final AppProperties applicationProperties;
 
     private final ObjectMapper objectMapper;
     
-    public KafkaProducerConfig(ApplicationProperties applicationProperties, ObjectMapper objectMapper) {
+    public KafkaProducerConfig(AppProperties applicationProperties, ObjectMapper objectMapper) {
         this.applicationProperties = applicationProperties;
         this.objectMapper = objectMapper;
     }
@@ -54,8 +54,8 @@ public class KafkaProducerConfig {
     }
     
     @Bean
-    public KafkaSenderService kafkaSenderService() {
-        return new KafkaSenderService(kafkaTemplate());
+    public SenderService kafkaSenderService() {
+        return new SenderService(kafkaTemplate());
     }
     
 }

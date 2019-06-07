@@ -30,7 +30,7 @@ import com.iliankm.sbms.config.JacksonConfig;
 import com.iliankm.sbms.config.KafkaConsumerConfig;
 import com.iliankm.sbms.config.KafkaProducerConfig;
 import com.iliankm.sbms.enums.Topic;
-import com.iliankm.sbms.service.KafkaSenderService;
+import com.iliankm.sbms.service.SenderService;
 import com.iliankm.sbms.service.TestTopicService;
 import com.iliankm.sbms.utils.RequestAttributesUtil;
 
@@ -53,7 +53,7 @@ public class TestConsumerTest {
     }
     
     @Autowired
-    private KafkaSenderService kafkaSenderService;
+    private SenderService kafkaSenderService;
     
     @Autowired
     private TestTopicService testTopicService;

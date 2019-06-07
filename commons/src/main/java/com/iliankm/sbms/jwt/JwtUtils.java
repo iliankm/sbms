@@ -12,20 +12,20 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.iliankm.sbms.utils.ApplicationProperties;
+import com.iliankm.sbms.utils.AppProperties;
 
 @Component
-public class JwtUtil {
+public class JwtUtils {
     
     private static final String ISSUER = "sbms";
     private static final String CLAIM_ROLES = "ROLES";
     private static final String CLAIM_IS_REFRESH_TOKEN = "CLAIM_IS_REFRESH_TOKEN";
     
-    private final ApplicationProperties applicationProperties;
+    private final AppProperties applicationProperties;
     
     private final Algorithm algorithm;
     
-    public JwtUtil(ApplicationProperties applicationProperties) {
+    public JwtUtils(AppProperties applicationProperties) {
         this.applicationProperties = applicationProperties;
         this.algorithm = Algorithm.HMAC256(applicationProperties.jwtSecret());
     }

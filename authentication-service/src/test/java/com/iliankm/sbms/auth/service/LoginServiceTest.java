@@ -19,7 +19,7 @@ import com.iliankm.sbms.auth.dto.JwtDTO;
 import com.iliankm.sbms.auth.dto.LoginDTO;
 import com.iliankm.sbms.config.ApplicationTestConfig;
 import com.iliankm.sbms.exception.UnauthorizedException;
-import com.iliankm.sbms.jwt.JwtUtil;
+import com.iliankm.sbms.jwt.JwtUtils;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles({"test"})
@@ -33,7 +33,7 @@ public class LoginServiceTest {
     @Autowired
     private LoginService loginService;
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtUtils jwtUtil;
 
     @Profile({"test"})
     @Configuration
@@ -41,7 +41,7 @@ public class LoginServiceTest {
     public static class TestConfiguration {
         
         @Bean
-        public LoginService loginService(JwtUtil jwtUtil) {
+        public LoginService loginService(JwtUtils jwtUtil) {
             LoginService loginService = new LoginService(jwtUtil);
             loginService.getUsers().put(USER_NAME, PASSWORD_HASHED);
             loginService.getRoles().put(USER_NAME, ROLE_USER);
