@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
-import org.springframework.kafka.test.rule.KafkaEmbedded;
+import org.springframework.kafka.test.rule.EmbeddedKafkaRule;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import com.iliankm.sbms.aspect.ConsumerAspect;
@@ -45,11 +45,11 @@ public class TestConsumerTest {
     }
     
     @ClassRule
-    public static KafkaEmbedded EMBEDDED_KAFKA = new KafkaEmbedded(1);
+    public static EmbeddedKafkaRule EMBEDDED_KAFKA = new EmbeddedKafkaRule(1);
     
     @BeforeClass
     public static void setupClass() {
-        System.setProperty("kafka.bootstrap.servers", EMBEDDED_KAFKA.getBrokersAsString());
+        System.setProperty("kafka.bootstrap.servers", EMBEDDED_KAFKA.getEmbeddedKafka().getBrokersAsString());
     }
     
     @Autowired
