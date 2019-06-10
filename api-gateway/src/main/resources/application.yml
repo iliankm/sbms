@@ -14,3 +14,21 @@ spring:
         - Path=/auth-service/**
         filters:
         - StripPrefix=1
+      - id: operations_service
+        uri: ${operations-service.url}
+        predicates:
+        - Path=/operations-service/**
+        filters:
+        - StripPrefix=1
+      - id: parser_service
+        uri: ${parser-service.url}
+        predicates:
+        - Path=/parser-service/**
+        filters:
+        - StripPrefix=1
+      - id: subscriber_service
+        uri: ${subscriber-service.url}
+        predicates:
+        - Path=/subscriber-service/**
+        filters:
+        - StripPrefix=1                        
