@@ -1,2 +1,8 @@
 auth-service: 
   url: http://localhost:8082
+operations-service: 
+  url: http://localhost:8083
+parser-service: 
+  url: http://localhost:8084
+subscriber-service: 
+  url: http://localhost:8085      
