@@ -2,4 +2,4 @@
 .classpath
 .project
 /.settings/
-!/subscriber-service.iml
+/subscriber-service.iml
