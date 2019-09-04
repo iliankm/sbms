@@ -18,6 +18,7 @@
 		<swagger2-version>2.9.2</swagger2-version>
 		<java-jwt-version>3.4.1</java-jwt-version>
 		<commons-lang-version>3.5</commons-lang-version>
+		<java.version>11</java.version>
 	</properties>
 
 	<modules>
