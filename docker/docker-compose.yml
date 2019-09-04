@@ -24,6 +24,10 @@ services:
       - LOGGING_FILE=/var/log/api-gateway.log
       - SPRING_PROFILES_ACTIVE=local
       - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8081
+      - AUTH_SERVICE_URL=http://authentication-service:8082
+      - OPERATIONS_SERVICE_URL=http://operations-service:8083
+      - PARSER_SERVICE_URL=http://parser-service:8084
+      - SUBSCRIBER_SERVICE_URL=http://subscriber-service:8085
     volumes:
       - ./logs:/var/log
     mem_limit: 1g
