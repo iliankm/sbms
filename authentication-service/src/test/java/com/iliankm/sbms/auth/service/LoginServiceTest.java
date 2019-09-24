@@ -1,10 +1,11 @@
 package com.iliankm.sbms.auth.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import java.util.Arrays;
-import java.util.HashSet;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.iliankm.sbms.auth.dto.JwtDTO;
+import com.iliankm.sbms.auth.dto.LoginDTO;
+import com.iliankm.sbms.config.ApplicationTestConfig;
+import com.iliankm.sbms.exception.UnauthorizedException;
+import com.iliankm.sbms.jwt.JwtUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.iliankm.sbms.auth.dto.JwtDTO;
-import com.iliankm.sbms.auth.dto.LoginDTO;
-import com.iliankm.sbms.config.ApplicationTestConfig;
-import com.iliankm.sbms.exception.UnauthorizedException;
-import com.iliankm.sbms.jwt.JwtUtils;
+
+import java.util.Arrays;
+import java.util.HashSet;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles({"test"})

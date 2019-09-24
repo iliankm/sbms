@@ -1,22 +1,16 @@
 package com.iliankm.sbms.auth.service;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import com.google.common.hash.Hashing;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import com.iliankm.sbms.auth.dto.JwtDTO;
 import com.iliankm.sbms.auth.dto.LoginDTO;
 import com.iliankm.sbms.exception.UnauthorizedException;
 import com.iliankm.sbms.jwt.JwtUtils;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.*;
 
 @Service
 @PropertySource(value = "classpath:users.properties")
@@ -37,7 +31,7 @@ public class LoginService {
                         && StringUtils.hasText(loginDTO.getPassword())) {
             String passwordHash = users.get(loginDTO.getUsername());
             if (passwordHash != null) {
-                if (Hashing.sha256().hashString(loginDTO.getPassword(), StandardCharsets.UTF_8).toString().equals(passwordHash)) {
+                if (DigestUtils.sha256Hex(loginDTO.getPassword()).equals(passwordHash)) {
                     String accessToken = jwtUtil.createAccessToken(loginDTO.getUsername(),
                             getUserRoles(loginDTO.getUsername()));
                     String refreshToken = jwtUtil.createRefreshToken(loginDTO.getUsername());
