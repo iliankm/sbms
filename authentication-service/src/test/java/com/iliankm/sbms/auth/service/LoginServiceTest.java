@@ -26,7 +26,7 @@ import com.iliankm.sbms.jwt.JwtUtils;
 public class LoginServiceTest {
     
     private static final String USER_NAME = "USER1";
-    private static final String PASSWORD_HASHED = "VVNFUjE=";
+    private static final String PASSWORD_HASHED = "a7d75d3c224258f85b23ca47152b37545a0bfcce249066b4a30205086775dfa3";
     private static final String PASSWORD = "USER1";
     private static final String ROLE_USER = "USER";
 
