@@ -14,7 +14,7 @@ import java.util.*;
 
 @Service
 @PropertySource(value = "classpath:users.properties")
-@ConfigurationProperties("")
+@ConfigurationProperties
 public class LoginService {
 
     private static final String MSG_INVALID_USERNAME_PASSWORD = "Invalid username or password.";
