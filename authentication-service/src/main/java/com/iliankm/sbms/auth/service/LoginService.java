@@ -22,7 +22,7 @@ public class LoginService {
     private final Map<String, String> users = new HashMap<>();
     private final Map<String, String> roles = new HashMap<>();
 
-    public LoginService(JwtUtils jwtUtil) {
+    LoginService(JwtUtils jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 
