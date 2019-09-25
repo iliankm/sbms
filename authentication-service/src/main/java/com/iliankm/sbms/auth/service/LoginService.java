@@ -1,10 +1,13 @@
 package com.iliankm.sbms.auth.service;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.iliankm.sbms.auth.dto.JwtDTO;
 import com.iliankm.sbms.auth.dto.LoginDTO;
 import com.iliankm.sbms.exception.UnauthorizedException;
 import com.iliankm.sbms.jwt.JwtUtils;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,8 @@ import java.util.*;
 public class LoginService {
 
     private static final String MSG_INVALID_USERNAME_PASSWORD = "Invalid username or password.";
+    private static final String MSG_INVALID_REFRESH_TOKEN = "Invalid refresh token.";
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final JwtUtils jwtUtil;
     private final Map<String, String> users = new HashMap<>();
     private final Map<String, String> roles = new HashMap<>();
@@ -42,6 +47,26 @@ public class LoginService {
         }
 
         throw new UnauthorizedException(MSG_INVALID_USERNAME_PASSWORD);
+    }
+
+    public JwtDTO refresh(String refreshToken) {
+        DecodedJWT decodedJwt;
+        try {
+            decodedJwt = jwtUtil.decodeToken(refreshToken);
+        } catch (Exception ex) {
+            log.warn(ex.getMessage());
+            throw new UnauthorizedException(MSG_INVALID_REFRESH_TOKEN);
+        }
+
+        if (jwtUtil.isRefreshToken(decodedJwt)) {
+            String username = decodedJwt.getSubject();
+            String accessToken = jwtUtil.createAccessToken(username, getUserRoles(username));
+            String newRefreshToken = jwtUtil.createRefreshToken(username);
+
+            return new JwtDTO(accessToken, newRefreshToken);
+        }
+
+        throw new UnauthorizedException(MSG_INVALID_REFRESH_TOKEN);
     }
 
     public Map<String, String> getUsers() {

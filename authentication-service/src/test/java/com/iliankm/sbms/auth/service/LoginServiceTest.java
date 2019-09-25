@@ -16,10 +16,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles({"test"})
@@ -57,12 +58,10 @@ public class LoginServiceTest {
         JwtDTO jwtDTO = loginService.login(loginDTO);
         //then
         //check access token
-        assertNotNull(jwtDTO.getAccessToken());
         DecodedJWT accessTokenDecoded = jwtUtil.decodeToken(jwtDTO.getAccessToken());
         assertEquals(USER_NAME, accessTokenDecoded.getSubject());
-        assertEquals(new HashSet<>(Arrays.asList(ROLE_USER)), jwtUtil.getRoles(accessTokenDecoded));
+        assertEquals(new HashSet<>(Collections.singletonList(ROLE_USER)), jwtUtil.getRoles(accessTokenDecoded));
         //check refresh token
-        assertNotNull(jwtDTO.getRefreshToken());
         DecodedJWT refreshTokenDecoded = jwtUtil.decodeToken(jwtDTO.getRefreshToken());
         assertEquals(USER_NAME, refreshTokenDecoded.getSubject());
         assertTrue(jwtUtil.isRefreshToken(refreshTokenDecoded));
@@ -103,5 +102,35 @@ public class LoginServiceTest {
         LoginDTO loginDTO = new LoginDTO(null, PASSWORD);
         //when
         loginService.login(loginDTO);
-    }     
+    }
+
+    @Test
+    public void refresh_With_Valid_Refresh_Token() {
+        //given
+        String refreshToken = jwtUtil.createRefreshToken(USER_NAME);
+        //when
+        JwtDTO jwtDTO = loginService.refresh(refreshToken);
+        //then
+        //check access token
+        DecodedJWT accessTokenDecoded = jwtUtil.decodeToken(jwtDTO.getAccessToken());
+        assertEquals(USER_NAME, accessTokenDecoded.getSubject());
+        assertEquals(new HashSet<>(Collections.singletonList(ROLE_USER)), jwtUtil.getRoles(accessTokenDecoded));
+        //check refresh token
+        DecodedJWT refreshTokenDecoded = jwtUtil.decodeToken(jwtDTO.getRefreshToken());
+        assertEquals(USER_NAME, refreshTokenDecoded.getSubject());
+        assertTrue(jwtUtil.isRefreshToken(refreshTokenDecoded));
+    }
+
+    @Test(expected = UnauthorizedException.class)
+    public void try_Refresh_With_Invalid_Token() {
+        loginService.refresh("");
+    }
+
+    @Test(expected = UnauthorizedException.class)
+    public void try_Refresh_With_Not_Refresh_Token() {
+        //given
+        String accessToken = jwtUtil.createAccessToken(USER_NAME, new HashSet<>(Collections.singletonList(ROLE_USER)));
+        //when
+        loginService.refresh(accessToken);
+    }
 }

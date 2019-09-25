@@ -24,4 +24,8 @@ public class LoginResource {
         return loginService.login(loginDTO);
     }
 
+    @PostMapping("/refresh")
+    public JwtDTO refresh(@RequestBody String refreshToken) {
+        return loginService.refresh(refreshToken);
+    }
 }

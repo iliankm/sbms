@@ -2,6 +2,7 @@ package com.iliankm.sbms.auth.web.rest;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,16 +36,13 @@ import com.iliankm.sbms.exception.UnauthorizedException;
 public class LoginResourceTest {
 
     private static final String BASE_URL = "/api-no-auth/v1/login";
-    
+    private static final String REFRESH_URL = BASE_URL + "/refresh";
     private static final String LOGIN_DTO = "{\"username\":\"%s\",\"password\":\"%s\"}";
-    
     private static final String USERNAME = "USERNAME";
-    
     private static final String PASSWORD = "PASSWORD";
-    
     private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
-    
     private static final String REFRESH_TOKEN = "REFRESH_TOKEN";
+    private static final String POSTED_REFRESH_TOKEN = "POSTED_REFRESH_TOKEN";
 
     @Autowired
     private MockMvc mvc;
@@ -107,5 +105,32 @@ public class LoginResourceTest {
         LoginDTO loginDTOArgument = argumentCaptor.getValue();
         assertEquals(USERNAME, loginDTOArgument.getUsername());
         assertEquals(PASSWORD, loginDTOArgument.getPassword());
+    }
+
+    @Test
+    public void refresh_OK_Test() throws Exception {
+        //given
+        when(loginService.refresh(any())).thenReturn(new JwtDTO(ACCESS_TOKEN, REFRESH_TOKEN));
+        //when
+        ResultActions resultActions =
+                mvc.perform(post(REFRESH_URL).contentType(MediaType.APPLICATION_JSON).content(POSTED_REFRESH_TOKEN));
+
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("accessToken").value(ACCESS_TOKEN))
+                .andExpect(jsonPath("refreshToken").value(REFRESH_TOKEN));
+        verify(loginService, times(1)).refresh(eq(POSTED_REFRESH_TOKEN));
+    }
+
+    @Test
+    public void try_Refresh_With_Invalid_Refresh_Token() throws Exception {
+        //given
+        when(loginService.refresh(any())).thenThrow(UnauthorizedException.class);
+        //when
+        ResultActions resultActions =
+                mvc.perform(post(REFRESH_URL).contentType(MediaType.APPLICATION_JSON).content("aa"));
+        //then
+        resultActions.andExpect(status().isUnauthorized());
     }
 }
