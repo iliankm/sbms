@@ -29,7 +29,7 @@ import com.iliankm.sbms.jwt.JwtUtils;
 import com.iliankm.sbms.utils.AppProperties;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = EchoResource.class, secure = true)
+@WebMvcTest(value = EchoResource.class)
 @ContextConfiguration(classes= {EchoResource.class})
 @Import({ApplicationTestConfig.class, WebSecurityConfig.class, FilterConfig.class})
 @ActiveProfiles({"test"})
