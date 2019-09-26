@@ -30,7 +30,7 @@ import com.iliankm.sbms.config.WebSecurityConfig;
 import com.iliankm.sbms.exception.UnauthorizedException;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = LoginResource.class, secure = true)
+@WebMvcTest(value = LoginResource.class)
 @Import({ApplicationTestConfig.class, WebSecurityConfig.class, FilterConfig.class})
 @ActiveProfiles({"test"})
 public class LoginResourceTest {
