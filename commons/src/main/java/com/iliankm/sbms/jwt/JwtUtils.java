@@ -30,7 +30,6 @@ public class JwtUtils {
     }
     
     public String createAccessToken(String subject, Set<String> roles) {
-        
         try {
             return JWT.create()
                     .withIssuer(ISSUER)
@@ -47,7 +46,6 @@ public class JwtUtils {
     }
     
     public String createRefreshToken(String subject) {
-
         try {
             return JWT.create()
                             .withIssuer(ISSUER)
@@ -64,7 +62,6 @@ public class JwtUtils {
     }
     
     public DecodedJWT decodeToken(String token) {
-        
         return JWT.require(algorithm).withIssuer(ISSUER).build().verify(token);
     }
     
