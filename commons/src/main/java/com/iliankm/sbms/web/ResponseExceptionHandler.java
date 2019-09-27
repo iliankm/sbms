@@ -24,9 +24,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
-    
     private static final String MSG_FORMAT = "\r\n{} ({} {})";
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @ExceptionHandler({RuntimeException.class})
     public void handleRuntimeException(Exception ex, HttpServletRequest request, HttpServletResponse response) throws IOException {
