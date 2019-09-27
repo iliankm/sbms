@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import com.iliankm.sbms.exception.NotFoundException;
 import com.iliankm.sbms.exception.UnauthorizedException;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class ResponseExceptionHandler extends
-                org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler {
+public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     
