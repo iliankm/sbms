@@ -35,7 +35,7 @@ import com.iliankm.sbms.exception.UnauthorizedException;
 @ActiveProfiles({"test"})
 public class LoginResourceTest {
 
-    private static final String BASE_URL = "/api-no-auth/v1/login";
+    private static final String BASE_URL = "/public/api/v1/login";
     private static final String REFRESH_URL = BASE_URL + "/refresh";
     private static final String LOGIN_DTO = "{\"username\":\"%s\",\"password\":\"%s\"}";
     private static final String USERNAME = "USERNAME";

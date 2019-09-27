@@ -48,7 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
             .authorizeRequests()
             .antMatchers("/api/**").authenticated()
-            .antMatchers("/api-no-auth/**").permitAll();
+            .antMatchers("/public/**").permitAll();
 
         //custom auth. filter for parsing/resolving JWT
         httpSecurity.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);

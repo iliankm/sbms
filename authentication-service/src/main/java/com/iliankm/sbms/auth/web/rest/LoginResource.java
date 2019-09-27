@@ -10,7 +10,7 @@ import com.iliankm.sbms.auth.dto.LoginDTO;
 import com.iliankm.sbms.auth.service.LoginService;
 
 @RestController
-@RequestMapping("api-no-auth/v1/login")
+@RequestMapping("public/api/v1/login")
 public class LoginResource {
     
     private final LoginService loginService;

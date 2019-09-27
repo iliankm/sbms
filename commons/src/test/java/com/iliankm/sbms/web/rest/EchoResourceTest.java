@@ -37,8 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles({"test"})
 public class EchoResourceTest {
 
-    private static final String NO_AUTH_URL = "/api-no-auth/v1/echo";
-    private static final String CORRELATION_ID_ECHO_URL = "/api-no-auth/v1/echo/correlation-id";
+    private static final String NO_AUTH_URL = "/public/api/v1/echo";
+    private static final String CORRELATION_ID_ECHO_URL = "/public/api/v1/echo/correlation-id";
     private static final String URL = "/api/v1/echo";
     private static final String QUERY_PARAM_NAME = "q";
     private static final String HEADER_CORRELATION_ID = "Correlation-Id";

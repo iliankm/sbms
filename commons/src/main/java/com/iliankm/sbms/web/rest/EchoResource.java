@@ -11,12 +11,12 @@ import com.iliankm.sbms.utils.RequestAttributesUtil;
 @RequestMapping("")
 public class EchoResource {
     
-    @GetMapping("api-no-auth/v1/echo")
+    @GetMapping("public/api/v1/echo")
     public String echoNoAuth(@RequestParam("q") String q) {
         return q;
     }
     
-    @GetMapping("api-no-auth/v1/echo/correlation-id")
+    @GetMapping("public/api/v1/echo/correlation-id")
     public String echoCorrelationId() {
         return RequestAttributesUtil.getCorrelationId();
     }
