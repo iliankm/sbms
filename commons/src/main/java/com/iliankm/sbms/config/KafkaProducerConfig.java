@@ -7,6 +7,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
@@ -20,7 +21,6 @@ import com.iliankm.sbms.utils.AppProperties;
 public class KafkaProducerConfig {
 
     private final AppProperties applicationProperties;
-
     private final ObjectMapper objectMapper;
     
     public KafkaProducerConfig(AppProperties applicationProperties, ObjectMapper objectMapper) {
@@ -28,17 +28,25 @@ public class KafkaProducerConfig {
         this.objectMapper = objectMapper;
     }
 
+    @Primary
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
-
         JsonSerializer<Object> jsonSerializer = new JsonSerializer<>(objectMapper);
-
         return new DefaultKafkaProducerFactory<>(producerConfigs(), null, jsonSerializer);
     }
 
+    @Primary
     @Bean
-    public Map<String, Object> producerConfigs() {
+    public KafkaTemplate<String, Object> kafkaTemplate(ProducerFactory<String, Object> producerFactory) {
+        return new KafkaTemplate<>(producerFactory);
+    }
+    
+    @Bean
+    public SenderService kafkaSenderService(KafkaTemplate<String, Object> kafkaTemplate) {
+        return new SenderService(kafkaTemplate);
+    }
 
+    private Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
 
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, applicationProperties.kafkaBootstrapServers());
@@ -47,15 +55,4 @@ public class KafkaProducerConfig {
 
         return props;
     }
-
-    @Bean
-    public KafkaTemplate<String, Object> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
-    }
-    
-    @Bean
-    public SenderService kafkaSenderService() {
-        return new SenderService(kafkaTemplate());
-    }
-    
 }
