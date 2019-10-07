@@ -1,7 +1,7 @@
 package com.iliankm.sbms.consumer;
 
 import com.iliankm.sbms.enums.Topic;
-import com.iliankm.sbms.service.TestTopicService;
+import com.iliankm.sbms.service.TestTransactionalTopicBService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -13,19 +13,18 @@ import java.util.Map;
 
 @Profile("test")
 @Component
-public class TestConsumer implements Consumer<Map<String, String>> {
-    
-    private final TestTopicService testTopicService;
-    
+public class TestTransactionalConsumerB implements Consumer<Map<String, String>> {
+
+    private final TestTransactionalTopicBService testTransactionalTopicBService;
+
     @Autowired
-    public TestConsumer(TestTopicService testTopicService) {
-        this.testTopicService = testTopicService;
+    public TestTransactionalConsumerB(TestTransactionalTopicBService testTransactionalTopicBService) {
+        this.testTransactionalTopicBService = testTransactionalTopicBService;
     }
 
     @Override
-    @KafkaListener(topics = Topic.Names.TOPIC_TEST, groupId = "sbms-test")
+    @KafkaListener(topics = Topic.Names.TOPIC_TRANSACTIONAL_B, groupId = "sbms-test", containerFactory = "transactionalKafkaListenerContainerFactory")
     public void listen(@Payload Map<String, String> message, @Headers Map<String, Object> headers) {
-        testTopicService.process(message);
+        testTransactionalTopicBService.process(message);
     }
-
 }

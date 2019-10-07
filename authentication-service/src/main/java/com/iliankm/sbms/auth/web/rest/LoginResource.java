@@ -1,6 +1,8 @@
 package com.iliankm.sbms.auth.web.rest;
 
 import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,7 @@ public class LoginResource {
     
     private final LoginService loginService;
     
+    @Autowired
     public LoginResource(LoginService loginService) {
         this.loginService = loginService;
     }

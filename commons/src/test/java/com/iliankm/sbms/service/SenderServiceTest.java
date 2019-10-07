@@ -54,9 +54,14 @@ public class SenderServiceTest {
         public KafkaTemplate<String, Object> kafkaTemplate() {
             return Mockito.mock(KafkaTemplate.class);
         }
+        @SuppressWarnings("unchecked")
+        @Bean
+        public KafkaTemplate<String, Object> transactionalKafkaTemplate() {
+            return Mockito.mock(KafkaTemplate.class);
+        }
         @Bean
         public SenderService kafkaSenderService() {
-            return new SenderService(kafkaTemplate());
+            return new SenderService(kafkaTemplate(), transactionalKafkaTemplate());
         }
     }
     

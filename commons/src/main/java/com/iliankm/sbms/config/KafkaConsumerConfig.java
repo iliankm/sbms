@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iliankm.sbms.utils.AppProperties;
+import org.springframework.kafka.transaction.KafkaTransactionManager;
 
 @ConditionalOnProperty(name = "kafka.enabled", havingValue = "true")
 @Configuration
@@ -34,20 +36,36 @@ public class KafkaConsumerConfig {
 
     @Primary
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Object>> kafkaListenerContainerFactory(ConsumerFactory<String, Object> consumerFactory) {
-        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory);
-
-        return factory;
-    }
-
-    @Primary
-    @Bean
     public ConsumerFactory<String, Object> consumerFactory() {
         JsonDeserializer<Object> jsonDeserializer = new JsonDeserializer<>(Object.class, objectMapper);
         jsonDeserializer.addTrustedPackages("*");
 
         return new DefaultKafkaConsumerFactory<>(consumerConfigs(), null, jsonDeserializer);
+    }
+
+    @Bean("transactionalConsumerFactory")
+    public ConsumerFactory<String, Object> transactionalConsumerFactory() {
+        JsonDeserializer<Object> jsonDeserializer = new JsonDeserializer<>(Object.class, objectMapper);
+        jsonDeserializer.addTrustedPackages("*");
+
+        return new DefaultKafkaConsumerFactory<>(transactionalConsumerConfigs(), null, jsonDeserializer);
+    }
+
+    @Primary
+    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Object>> kafkaListenerContainerFactory(ConsumerFactory<String, Object> consumerFactory) {
+        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory);
+        return factory;
+    }
+
+    @Bean("transactionalKafkaListenerContainerFactory")
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Object>> transactionalKafkaListenerContainerFactory(@Qualifier("transactionalConsumerFactory") ConsumerFactory<String, Object> consumerFactory, KafkaTransactionManager<String, Object> kafkaTransactionManager) {
+        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory);
+        factory.getContainerProperties().setTransactionManager(kafkaTransactionManager);
+
+        return factory;
     }
 
     private Map<String, Object> consumerConfigs() {
@@ -59,4 +77,13 @@ public class KafkaConsumerConfig {
 
         return props;
     }
+
+    private Map<String, Object> transactionalConsumerConfigs() {
+        Map<String, Object> props = consumerConfigs();
+
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
+        props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed");
+
+        return props;
+     }
 }

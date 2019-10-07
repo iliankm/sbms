@@ -5,7 +5,9 @@ package com.iliankm.sbms.enums;
  */
 public enum Topic {
     
-    TEST(Names.TOPIC_TEST);
+    TEST(Names.TOPIC_TEST),
+    TRANSACTIONAL_A(Names.TOPIC_TRANSACTIONAL_A),
+    TRANSACTIONAL_B(Names.TOPIC_TRANSACTIONAL_B);
     
     private String topicName;
     
@@ -17,8 +19,9 @@ public enum Topic {
         return topicName;
     }
     
-    public static interface Names {
+    public interface Names {
         String TOPIC_TEST = "ikm.test";
+        String TOPIC_TRANSACTIONAL_A = "ikm.transactional.a";
+        String TOPIC_TRANSACTIONAL_B = "ikm.transactional.b";
     }
-    
 }

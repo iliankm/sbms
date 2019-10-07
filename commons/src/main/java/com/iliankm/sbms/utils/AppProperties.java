@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AppProperties {
+
+    @Value("${spring.application.name}")
+    private String applicationName;
     
     @Value("${jwt.secret:}")
     private String jwtSecret;
@@ -27,7 +30,10 @@ public class AppProperties {
     private String redisPassword;
     @Value("${redis.cache.ttl:0}")
     private int redisCacheTtl;
-    
+
+    public String applicationName() {
+        return applicationName;
+    }
     public String jwtSecret() {
         return jwtSecret;
     }
@@ -63,5 +69,4 @@ public class AppProperties {
     public int redisCacheTtl() {
         return redisCacheTtl;
     }
-    
 }
