@@ -95,7 +95,7 @@ public class TestTransactionalConsumerTest {
     public void setup() throws InterruptedException {
         RequestAttributesUtil.setCorrelationId(CORRELATION_ID);
         //give time EMBEDDED_KAFKA to start
-        Thread.sleep(10000);
+        Thread.sleep(5000);
     }
     
     @Test
