@@ -59,7 +59,7 @@ public class TransactionalConsumerTest {
     }
 
     @AfterClass
-    public static void tearDown(){
+    public static void tearDown() {
         EMBEDDED_KAFKA.getEmbeddedKafka().getKafkaServers().forEach(KafkaServer::shutdown);
         EMBEDDED_KAFKA.getEmbeddedKafka().getKafkaServers().forEach(KafkaServer::awaitShutdown);
     }

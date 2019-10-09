@@ -9,10 +9,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
+
+import kafka.server.KafkaServer;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,15 +45,18 @@ public class TestConsumerTest {
     
     @ClassRule
     public static EmbeddedKafkaRule EMBEDDED_KAFKA = new EmbeddedKafkaRule(1);
-    
     @BeforeClass
     public static void setupClass() {
         System.setProperty("kafka.bootstrap.servers", EMBEDDED_KAFKA.getEmbeddedKafka().getBrokersAsString());
     }
-    
+    @AfterClass
+    public static void tearDown() {
+        EMBEDDED_KAFKA.getEmbeddedKafka().getKafkaServers().forEach(KafkaServer::shutdown);
+        EMBEDDED_KAFKA.getEmbeddedKafka().getKafkaServers().forEach(KafkaServer::awaitShutdown);
+    }
+
     @Autowired
     private SenderService kafkaSenderService;
-    
     @Autowired
     private TestTopicService testTopicService;
     
@@ -66,7 +68,7 @@ public class TestConsumerTest {
         @Bean
         public TestTopicService testTopicService() {
             return Mockito.mock(TestTopicService.class);
-        } 
+        }
         @Bean
         public TestConsumer testConsumer() {
             return new TestConsumer(testTopicService());
@@ -78,23 +80,22 @@ public class TestConsumerTest {
     }
     
     @Before
-    public void setup() throws InterruptedException {
-        //give time EMBEDDED_KAFKA to start
-        Thread.sleep(1000);
+    public void setup() {
+        RequestAttributesUtil.setCorrelationId(CORRELATION_ID);
     }
     
     @Test
     public void send_to_Test_Topic() throws Exception {
         //given
         CountDownLatch consumerLatch = new CountDownLatch(1);
-        RequestAttributesUtil.setCorrelationId(CORRELATION_ID);
         final StringBuilder correlationIdInConsumer = new StringBuilder();
         doAnswer(i -> {
             correlationIdInConsumer.append(RequestAttributesUtil.getCorrelationId());
             consumerLatch.countDown();
             return null;
-        }).when(testTopicService).process(any());
+        }).when(testTopicService).process(eq(MESSAGE));
         //when
+        Thread.sleep(1000);
         kafkaSenderService.send(Topic.TEST, MESSAGE);
         //then
         //wait the latch for 5 seconds
