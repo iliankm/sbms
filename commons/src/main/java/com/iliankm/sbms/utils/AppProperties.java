@@ -21,6 +21,8 @@ public class AppProperties {
     private String kafkaBootstrapServers;
     @Value("${kafka.group.id:}")
     private String kafkaGroupId;
+    @Value("${kafka.auto.offset.reset:latest}")
+    private String kafkaAutoOffsetReset;
     
     @Value("${redis.enabled:false}")
     private boolean redisEnabled;
@@ -53,7 +55,11 @@ public class AppProperties {
     public String kafkaGroupId() {
         return kafkaGroupId;
     }
-    
+
+    public String kafkaAutoOffsetReset() {
+        return kafkaAutoOffsetReset;
+    }
+
     public boolean redisEnabled() {
         return redisEnabled;
     }
@@ -69,4 +75,5 @@ public class AppProperties {
     public int redisCacheTtl() {
         return redisCacheTtl;
     }
+
 }

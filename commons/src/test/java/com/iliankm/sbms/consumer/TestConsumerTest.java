@@ -1,28 +1,5 @@
 package com.iliankm.sbms.consumer;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verify;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-import kafka.server.KafkaServer;
-import org.junit.*;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Profile;
-import org.springframework.kafka.test.rule.EmbeddedKafkaRule;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import com.iliankm.sbms.aspect.ConsumerAspect;
 import com.iliankm.sbms.config.ApplicationTestConfig;
 import com.iliankm.sbms.config.JacksonConfig;
@@ -32,6 +9,25 @@ import com.iliankm.sbms.enums.Topic;
 import com.iliankm.sbms.service.SenderService;
 import com.iliankm.sbms.service.TestTopicService;
 import com.iliankm.sbms.utils.RequestAttributesUtil;
+import kafka.server.KafkaServer;
+import org.junit.*;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.*;
+import org.springframework.kafka.test.rule.EmbeddedKafkaRule;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles({"test"})
@@ -44,7 +40,7 @@ public class TestConsumerTest {
     }
     
     @ClassRule
-    public static EmbeddedKafkaRule EMBEDDED_KAFKA = new EmbeddedKafkaRule(1);
+    public static EmbeddedKafkaRule EMBEDDED_KAFKA = new EmbeddedKafkaRule(1, true, Topic.Names.TOPIC_TEST);
     @BeforeClass
     public static void setupClass() {
         System.setProperty("kafka.bootstrap.servers", EMBEDDED_KAFKA.getEmbeddedKafka().getBrokersAsString());
@@ -59,7 +55,7 @@ public class TestConsumerTest {
     private SenderService kafkaSenderService;
     @Autowired
     private TestTopicService testTopicService;
-    
+
     @Profile({"test"})
     @Configuration
     @EnableAspectJAutoProxy(proxyTargetClass = true)
@@ -95,7 +91,6 @@ public class TestConsumerTest {
             return null;
         }).when(testTopicService).process(eq(MESSAGE));
         //when
-        Thread.sleep(1000);
         kafkaSenderService.send(Topic.TEST, MESSAGE);
         //then
         //wait the latch for 5 seconds

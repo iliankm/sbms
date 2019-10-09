@@ -51,7 +51,7 @@ public class TransactionalConsumerTest {
     }
 
     @ClassRule
-    public static EmbeddedKafkaRule EMBEDDED_KAFKA = new EmbeddedKafkaRule(3);
+    public static EmbeddedKafkaRule EMBEDDED_KAFKA = new EmbeddedKafkaRule(3, true, Topic.Names.TOPIC_TRANSACTIONAL_A, Topic.Names.TOPIC_TRANSACTIONAL_B);
     
     @BeforeClass
     public static void setupClass() {
