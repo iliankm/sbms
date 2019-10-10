@@ -77,11 +77,11 @@ public class TransactionalConsumerTest {
         public ConsumerAspect consumerAspect() {
             return new ConsumerAspect();
         }
-        @Bean("transactionalTopicAService")
+        @Bean
         public Service transactionalTopicAService() {
             return Mockito.mock(Service.class);
         }
-        @Bean("transactionalTopicBService")
+        @Bean
         public Service transactionalTopicBService() {
             return Mockito.mock(Service.class);
         }

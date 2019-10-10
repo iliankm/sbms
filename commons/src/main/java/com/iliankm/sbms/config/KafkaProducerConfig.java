@@ -1,5 +1,6 @@
 package com.iliankm.sbms.config;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -17,6 +18,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iliankm.sbms.service.SenderService;
 import com.iliankm.sbms.utils.AppProperties;
 import org.springframework.kafka.transaction.KafkaTransactionManager;
+
+import javax.annotation.Resource;
 
 @ConditionalOnProperty(name = "kafka.enabled", havingValue = "true")
 @Configuration
@@ -37,7 +40,7 @@ public class KafkaProducerConfig {
         return new DefaultKafkaProducerFactory<>(producerConfigs(), null, jsonSerializer);
     }
 
-    @Bean("transactionalProducerFactory")
+    @Bean
     public ProducerFactory<String, Object> transactionalProducerFactory() {
         JsonSerializer<Object> jsonSerializer = new JsonSerializer<>(objectMapper);
         DefaultKafkaProducerFactory<String, Object> producerFactory = new DefaultKafkaProducerFactory<>(transactionalProducerConfigs(), null, jsonSerializer);
@@ -47,7 +50,7 @@ public class KafkaProducerConfig {
 
     @Bean
     public KafkaTransactionManager<String, Object> kafkaTransactionManager(@Qualifier("transactionalProducerFactory") ProducerFactory<String, Object> transactionalProducerFactory) {
-        return new KafkaTransactionManager(transactionalProducerFactory);
+        return new KafkaTransactionManager<>(transactionalProducerFactory);
     }
 
     @Primary
@@ -56,7 +59,7 @@ public class KafkaProducerConfig {
         return new KafkaTemplate<>(producerFactory);
     }
 
-    @Bean("transactionalKafkaTemplate")
+    @Bean
     public KafkaTemplate<String, Object> transactionalKafkaTemplate(@Qualifier("transactionalProducerFactory") ProducerFactory<String, Object> producerFactory) {
         return new KafkaTemplate<>(producerFactory);
     }
@@ -73,15 +76,16 @@ public class KafkaProducerConfig {
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 
-        return props;
+        return Collections.unmodifiableMap(props);
     }
 
     private Map<String, Object> transactionalProducerConfigs() {
-        Map<String, Object> props = producerConfigs();
+        Map<String, Object> props = new HashMap<>();
+        props.putAll(producerConfigs());
 
         props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
         props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "transaction-id");
 
-        return props;
+        return Collections.unmodifiableMap(props);
     }
 }

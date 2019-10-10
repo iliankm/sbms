@@ -1,5 +1,6 @@
 package com.iliankm.sbms.config;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public class KafkaConsumerConfig {
         return new DefaultKafkaConsumerFactory<>(consumerConfigs(), null, jsonDeserializer);
     }
 
-    @Bean("transactionalConsumerFactory")
+    @Bean
     public ConsumerFactory<String, Object> transactionalConsumerFactory() {
         JsonDeserializer<Object> jsonDeserializer = new JsonDeserializer<>(Object.class, objectMapper);
         jsonDeserializer.addTrustedPackages("*");
@@ -59,7 +60,7 @@ public class KafkaConsumerConfig {
         return factory;
     }
 
-    @Bean("transactionalKafkaListenerContainerFactory")
+    @Bean
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Object>> transactionalKafkaListenerContainerFactory(@Qualifier("transactionalConsumerFactory") ConsumerFactory<String, Object> consumerFactory, KafkaTransactionManager<String, Object> kafkaTransactionManager) {
         ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
@@ -76,15 +77,16 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, applicationProperties.kafkaGroupId());
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, applicationProperties.kafkaAutoOffsetReset());
 
-        return props;
+        return Collections.unmodifiableMap(props);
     }
 
     private Map<String, Object> transactionalConsumerConfigs() {
-        Map<String, Object> props = consumerConfigs();
+        Map<String, Object> props = new HashMap<>();
+        props.putAll(consumerConfigs());
 
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
         props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed");
 
-        return props;
+        return Collections.unmodifiableMap(props);
      }
 }
