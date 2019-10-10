@@ -81,7 +81,6 @@ public class LoginService {
 
     private Set<String> getUserRoles(String username) {
         String rolesString = roles.get(username);
-        return StringUtils.isEmpty(rolesString) ? Collections.emptySet()
-                        : new HashSet<>(Arrays.asList(rolesString.split(",")));
+        return StringUtils.isEmpty(rolesString) ? Collections.emptySet() : Set.of(rolesString.split(","));
     }
 }

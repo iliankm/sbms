@@ -1,12 +1,10 @@
 package com.iliankm.sbms.jwt;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.iliankm.sbms.config.ApplicationTestConfig;
+import com.iliankm.sbms.utils.AppProperties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -17,11 +15,12 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StringUtils;
-import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.iliankm.sbms.config.ApplicationTestConfig;
-import com.iliankm.sbms.utils.AppProperties;
+
+import java.util.Collections;
+import java.util.Set;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles({"test"})
@@ -41,7 +40,7 @@ public class JwtUtilsTest {
     @Test
     public void createAccessToken_Test() {
         //when
-        String jwt = jwtUtils.createAccessToken(SUBJECT, new HashSet<>(Arrays.asList(ROLE)));
+        String jwt = jwtUtils.createAccessToken(SUBJECT, Set.of(ROLE));
         //then
         assertTrue(StringUtils.hasText(jwt));
     }
@@ -60,13 +59,13 @@ public class JwtUtilsTest {
     }
     
     @Test(expected = TokenExpiredException.class)
-    public void decodeExpiredToken_Test() throws InterruptedException {
+    public void decodeExpiredToken_Test() {
         //given
         AppProperties applicationProperties = Mockito.mock(AppProperties.class);
         when(applicationProperties.jwtAccessTokenExpirationTime()).thenReturn(-1);
         when(applicationProperties.jwtSecret()).thenReturn("SECRET");
         JwtUtils jwtUtil = new JwtUtils(applicationProperties);
-        String jwt = jwtUtil.createAccessToken(SUBJECT, new HashSet<>(Arrays.asList(ROLE)));
+        String jwt = jwtUtil.createAccessToken(SUBJECT, Set.of(ROLE));
         //when
         jwtUtil.decodeToken(jwt);
     }
@@ -74,12 +73,12 @@ public class JwtUtilsTest {
     @Test
     public void decodeValidToken_Test() {
         //given
-        String jwt = jwtUtils.createAccessToken(SUBJECT, new HashSet<>(Arrays.asList(ROLE)));
+        String jwt = jwtUtils.createAccessToken(SUBJECT, Set.of(ROLE));
         //when
         DecodedJWT decodedJwt = jwtUtils.decodeToken(jwt);
         //then
         assertEquals(SUBJECT, decodedJwt.getSubject());
-        assertEquals(new HashSet<>(Arrays.asList(ROLE)), jwtUtils.getRoles(decodedJwt));
+        assertEquals(Set.of(ROLE), jwtUtils.getRoles(decodedJwt));
         assertFalse(jwtUtils.isRefreshToken(decodedJwt));
     }
     
@@ -94,5 +93,4 @@ public class JwtUtilsTest {
         assertEquals(Collections.emptySet(), jwtUtils.getRoles(decodedJwt));
         assertTrue(jwtUtils.isRefreshToken(decodedJwt));
     }
-
 }

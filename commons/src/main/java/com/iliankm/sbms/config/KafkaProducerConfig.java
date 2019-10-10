@@ -1,8 +1,8 @@
 package com.iliankm.sbms.config;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iliankm.sbms.service.SenderService;
+import com.iliankm.sbms.utils.AppProperties;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,12 +14,11 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iliankm.sbms.service.SenderService;
-import com.iliankm.sbms.utils.AppProperties;
 import org.springframework.kafka.transaction.KafkaTransactionManager;
 
-import javax.annotation.Resource;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @ConditionalOnProperty(name = "kafka.enabled", havingValue = "true")
 @Configuration
@@ -70,18 +69,14 @@ public class KafkaProducerConfig {
     }
 
     private Map<String, Object> producerConfigs() {
-        Map<String, Object> props = new HashMap<>();
-
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, applicationProperties.kafkaBootstrapServers());
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-
-        return Collections.unmodifiableMap(props);
+        return Map.of(
+                ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, applicationProperties.kafkaBootstrapServers(),
+                ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
+                ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
     }
 
     private Map<String, Object> transactionalProducerConfigs() {
-        Map<String, Object> props = new HashMap<>();
-        props.putAll(producerConfigs());
+        Map<String, Object> props = new HashMap<>(producerConfigs());
 
         props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
         props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "transaction-id");

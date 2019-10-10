@@ -70,19 +70,15 @@ public class KafkaConsumerConfig {
     }
 
     private Map<String, Object> consumerConfigs() {
-        Map<String, Object> props = new HashMap<>();
-
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, applicationProperties.kafkaBootstrapServers());
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, applicationProperties.kafkaGroupId());
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, applicationProperties.kafkaAutoOffsetReset());
-
-        return Collections.unmodifiableMap(props);
+        return Map.of(
+                ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, applicationProperties.kafkaBootstrapServers(),
+                ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
+                ConsumerConfig.GROUP_ID_CONFIG, applicationProperties.kafkaGroupId(),
+                ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, applicationProperties.kafkaAutoOffsetReset());
     }
 
     private Map<String, Object> transactionalConsumerConfigs() {
-        Map<String, Object> props = new HashMap<>();
-        props.putAll(consumerConfigs());
+        Map<String, Object> props = new HashMap<>(consumerConfigs());
 
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
         props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed");
