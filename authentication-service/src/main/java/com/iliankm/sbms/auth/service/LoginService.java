@@ -13,12 +13,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @Service
 @PropertySource(value = "classpath:users.properties")
 @ConfigurationProperties
+@Validated
 public class LoginService {
 
     private static final String MSG_INVALID_USERNAME_PASSWORD = "Invalid username or password.";
@@ -33,18 +37,15 @@ public class LoginService {
         this.jwtUtil = jwtUtil;
     }
 
-    public JwtDTO login(LoginDTO loginDTO) {
-        if (loginDTO != null && StringUtils.hasText(loginDTO.getUsername())
-                        && StringUtils.hasText(loginDTO.getPassword())) {
-            String passwordHash = users.get(loginDTO.getUsername());
-            if (passwordHash != null) {
-                if (DigestUtils.sha256Hex(loginDTO.getPassword()).equals(passwordHash)) {
-                    String accessToken = jwtUtil.createAccessToken(loginDTO.getUsername(),
-                            getUserRoles(loginDTO.getUsername()));
-                    String refreshToken = jwtUtil.createRefreshToken(loginDTO.getUsername());
+    public JwtDTO login(@Valid @NotNull LoginDTO loginDTO) {
+        String passwordHash = users.get(loginDTO.getUsername());
+        if (passwordHash != null) {
+            if (DigestUtils.sha256Hex(loginDTO.getPassword()).equals(passwordHash)) {
+                String accessToken = jwtUtil.createAccessToken(loginDTO.getUsername(),
+                        getUserRoles(loginDTO.getUsername()));
+                String refreshToken = jwtUtil.createRefreshToken(loginDTO.getUsername());
 
-                    return new JwtDTO(accessToken, refreshToken);
-                }
+                return new JwtDTO(accessToken, refreshToken);
             }
         }
 

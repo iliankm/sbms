@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -67,7 +68,7 @@ public class LoginServiceTest {
         assertTrue(jwtUtil.isRefreshToken(refreshTokenDecoded));
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test(expected = ConstraintViolationException.class)
     public void try_Login_With_Null_Argument_Test() {
         loginService.login(null);
     }    
@@ -80,7 +81,7 @@ public class LoginServiceTest {
         loginService.login(loginDTO);
     }
     
-    @Test(expected = UnauthorizedException.class)
+    @Test(expected = ConstraintViolationException.class)
     public void try_Login_With_Null_Password_Test() {
         //given
         LoginDTO loginDTO = new LoginDTO(USER_NAME, null);
@@ -96,7 +97,7 @@ public class LoginServiceTest {
         loginService.login(loginDTO);
     } 
     
-    @Test(expected = UnauthorizedException.class)
+    @Test(expected = ConstraintViolationException.class)
     public void try_Login_With_Null_Username_Test() {
         //given
         LoginDTO loginDTO = new LoginDTO(null, PASSWORD);

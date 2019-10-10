@@ -7,6 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import com.iliankm.sbms.jwt.JwtUtils;
 import com.iliankm.sbms.utils.AppProperties;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
 @Profile({"test"})
 @Configuration
@@ -28,4 +29,11 @@ public class ApplicationTestConfig {
         return new JwtUtils(applicationProperties());
     }
 
+    /**
+     * Needed in order to have bean validation on Components and Services
+     */
+    @Bean
+    public MethodValidationPostProcessor methodValidationPostProcessor() {
+        return new MethodValidationPostProcessor();
+    }
 }
