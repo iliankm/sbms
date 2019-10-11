@@ -1,6 +1,8 @@
 package com.iliankm.sbms.config;
 
 import java.time.Duration;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -30,6 +32,7 @@ public class RedisConfig extends CachingConfigurerSupport {
 
     private final AppProperties applicationProperties;
 
+    @Autowired
     public RedisConfig(AppProperties applicationProperties) {
         this.applicationProperties = applicationProperties;
     }
@@ -51,7 +54,7 @@ public class RedisConfig extends CachingConfigurerSupport {
             
             String[] host = applicationProperties.redisHosts().iterator().next().split(":");
             
-            RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(host[0], Integer.valueOf(host[1]));
+            RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(host[0], Integer.parseInt(host[1]));
             
             if (StringUtils.hasText(applicationProperties.redisPassword())) {
                 redisConfig.setPassword(RedisPassword.of(applicationProperties.redisPassword()));
@@ -67,7 +70,7 @@ public class RedisConfig extends CachingConfigurerSupport {
 
                 applicationProperties.redisHosts().forEach(r -> {
                     String[] parts = r.split(":");
-                    redisConfig.addClusterNode(new RedisClusterNode(parts[0], Integer.valueOf(parts[1])));
+                    redisConfig.addClusterNode(new RedisClusterNode(parts[0], Integer.parseInt(parts[1])));
                 });
 
                 if (StringUtils.hasText(applicationProperties.redisPassword())) {

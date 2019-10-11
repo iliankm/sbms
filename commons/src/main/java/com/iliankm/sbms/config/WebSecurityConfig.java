@@ -2,6 +2,7 @@ package com.iliankm.sbms.config;
 
 import com.iliankm.sbms.web.ResponseExceptionHandler;
 import com.iliankm.sbms.web.filter.AuthenticationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -20,6 +21,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
     private final AuthenticationFilter authenticationFilter;
     
+    @Autowired
     public WebSecurityConfig(AuthenticationFilter authenticationFilter) {
         this.authenticationFilter = authenticationFilter;
     }
