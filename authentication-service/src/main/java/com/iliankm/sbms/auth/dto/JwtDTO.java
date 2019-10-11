@@ -3,7 +3,7 @@ package com.iliankm.sbms.auth.dto;
 import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 
-public class JwtDTO implements Serializable {
+public final class JwtDTO implements Serializable {
     
     private static final long serialVersionUID = 3030037646814701765L;
     

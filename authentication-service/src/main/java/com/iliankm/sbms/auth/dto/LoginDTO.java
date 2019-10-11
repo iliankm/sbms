@@ -3,7 +3,7 @@ package com.iliankm.sbms.auth.dto;
 import java.io.Serializable;
 import javax.validation.constraints.NotEmpty;
 
-public class LoginDTO implements Serializable {
+public final class LoginDTO implements Serializable {
     
     private static final long serialVersionUID = -342721006264186532L;
 
