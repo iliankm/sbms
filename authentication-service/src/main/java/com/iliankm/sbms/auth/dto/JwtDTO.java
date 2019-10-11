@@ -12,7 +12,7 @@ public class JwtDTO implements Serializable {
     
     @NotNull
     private String refreshToken;
-    
+
     @SuppressWarnings("unused")
     private JwtDTO() {}
     
