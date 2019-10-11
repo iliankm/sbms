@@ -1,5 +1,6 @@
 package com.iliankm.sbms.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,7 @@ public class FilterConfig {
     
     private final JwtUtils jwtUtil;
     
+    @Autowired
     public FilterConfig(JwtUtils jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
@@ -36,5 +38,4 @@ public class FilterConfig {
     public CorrelationFilter correlationFilter() {
         return new CorrelationFilter();
     }
-    
 }
