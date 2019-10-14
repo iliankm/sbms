@@ -38,3 +38,25 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: q
+  postgres:
+    image: postgres:11.5
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: q
+      POSTGRES_DB: keycloak
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+  keycloak:
+    image: jboss/keycloak
+    ports:
+      - 8889:8080
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: q
+      DB_VENDOR: postgres
+      DB_ADDR: postgres:5432
+      DB_USER: postgres
+      DB_PASSWORD: q
