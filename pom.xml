@@ -18,6 +18,7 @@
 		<swagger2-version>2.9.2</swagger2-version>
 		<java-jwt-version>3.4.1</java-jwt-version>
 		<commons-lang-version>3.5</commons-lang-version>
+		<modelmapper-version>2.3.2</modelmapper-version>
 		<java.version>11</java.version>
 	</properties>
 
@@ -74,6 +75,11 @@
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
 				<version>${commons-lang-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.modelmapper</groupId>
+				<artifactId>modelmapper</artifactId>
+				<version>${modelmapper-version}</version>
 			</dependency>
 
 			<dependency>
